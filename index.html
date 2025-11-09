@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Cash Tracker</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { margin: 5px; padding: 7px; }
+  </style>
+</head>
+<body>
+  <h2>Daily Cash Tracker</h2>
+  <input id="amount" type="number" placeholder="Enter Amount">
+  <input id="note" type="text" placeholder="Description">
+  <button onclick="add()">Add</button>
+
+  <ul id="list"></ul>
+
+  <script>
+    function add(){
+      let amt = document.getElementById("amount").value;
+      let note = document.getElementById("note").value;
+      if(amt !== ""){
+        let li = document.createElement("li");
+        li.innerText = "₹" + amt + " - " + note;
+        document.getElementById("list").appendChild(li);
+        document.getElementById("amount").value="";
+        document.getElementById("note").value="";
+      }
+    }
+  </script>
+</body>
+</html>
