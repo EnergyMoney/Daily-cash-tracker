@@ -1,32 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Daily Cash Tracker</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    input, button { margin: 5px; padding: 7px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Cash Tracker</title>
 </head>
 <body>
-  <h2>Daily Cash Tracker</h2>
-  <input id="amount" type="number" placeholder="Enter Amount">
-  <input id="note" type="text" placeholder="Description">
-  <button onclick="add()">Add</button>
+    <h2>Daily Cash Tracker</h2>
+    <input type="number" id="amount" placeholder="Enter Amount">
+    <input type="text" id="description" placeholder="Description">
+    <button onclick="addEntry()">Add</button>
 
-  <ul id="list"></ul>
+    <h3>History</h3>
+    <ul id="historyList"></ul>
 
-  <script>
-    function add(){
-      let amt = document.getElementById("amount").value;
-      let note = document.getElementById("note").value;
-      if(amt !== ""){
-        let li = document.createElement("li");
-        li.innerText = "₹" + amt + " - " + note;
-        document.getElementById("list").appendChild(li);
-        document.getElementById("amount").value="";
-        document.getElementById("note").value="";
-      }
-    }
-  </script>
+    <script>
+        let entries = JSON.parse(localStorage.getItem("cashData")) || [];
+
+        function renderList() {
+            const list = document.getElementById("historyList");
+            list.innerHTML = "";
+            entries.forEach((item, index) => {
+                list.innerHTML += `<li>${item.amount} — ${item.desc}</li>`;
+            });
+        }
+
+        function addEntry() {
+            const amount = document.getElementById("amount").value;
+            const desc = document.getElementById("description").value;
+
+            if(amount === "" || desc === "") return;
+
+            entries.push({ amount, desc });
+            localStorage.setItem("cashData", JSON.stringify(entries));
+            renderList();
+
+            document.getElementById("amount").value = "";
+            document.getElementById("description").value = "";
+        }
+
+        renderList();
+    </script>
 </body>
 </html>
