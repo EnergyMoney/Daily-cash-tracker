@@ -1,0 +1,76 @@
+:root{
+  --bg:#f7f7fb;
+  --card:#ffffff;
+  --accent:#6b5ef8;
+  --green:#2ecc71;
+  --red:#ff6b6b;
+  --muted:#8b8b95;
+  font-size:16px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.app{
+  max-width:900px;
+  margin:12px auto;
+  padding:12px;
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+header h1{font-size:1.25rem;margin:0}
+.balance{
+  font-weight:700;
+  background:linear-gradient(90deg,var(--accent),#8c6bff);
+  color:white;padding:8px 12px;border-radius:8px;
+  font-size:1rem;
+}
+.entry-card{
+  background:var(--card);
+  padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(20,20,50,0.06);
+  margin-bottom:12px;
+}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.row input, .row select{
+  flex:1;padding:10px;border-radius:8px;border:1px solid #e6e6ef;font-size:0.95rem;
+}
+.row select{max-width:160px}
+.actions{justify-content:flex-end}
+button{background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
+button.muted{background:#f0f1f6;color:var(--muted);margin-left:8px}
+.summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.summary-item{background:var(--card);flex:1;min-width:200px;padding:10px;border-radius:10px}
+.summary-item .label{color:var(--muted);font-size:0.85rem}
+.summary-item .value{font-weight:700;margin-top:6px}
+.history{margin-bottom:12px}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{
+  background:var(--card);padding:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 3px 10px rgba(20,20,50,0.03);
+}
+.item .left{display:flex;gap:10px;align-items:center}
+.chip{padding:6px 8px;border-radius:8px;font-size:0.85rem;background:#f0f2ff;color:var(--accent)}
+.desc{color:#333;font-weight:600}
+.meta{color:var(--muted);font-size:0.85rem}
+.controls{display:flex;gap:8px}
+.icon-btn{background:transparent;border:1px solid #eee;padding:6px;border-radius:8px;cursor:pointer}
+.reports{background:var(--card);padding:12px;border-radius:12px}
+.chart-wrap{max-width:100%;height:240px}
+footer{margin-top:12px;color:var(--muted);font-size:0.9rem;text-align:center}
+
+/* mobile */
+@media (max-width:600px){
+  .row{flex-direction:column}
+  .row select{max-width:100%}
+  .summary{flex-direction:column}
+}
