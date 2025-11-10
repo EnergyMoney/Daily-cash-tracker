@@ -166,8 +166,18 @@ function updateAll(){
   renderChart();
   buildMonthlyReport();
 }
-
+// Monthly Limit Check
+function checkLimit() {
+  const entries = JSON.parse(localStorage.getItem("dailyCash_v1") || "[]");
+  const month = new Date().toISOString().slice(0,7);
+  const thisMonth = entries.filter(e => e.ts.toString().startsWith(month));
+  return thisMonth.length < 100;
+}
 addBtn.addEventListener("click", () => {
+  if (!checkLimit()) {
+  alert("Monthly limit reached! Subscribe premium ₹29/month");
+  return;
+  }
   const amt = amountEl.value.trim();
   const desc = descEl.value.trim();
   const cat = categoryEl.value;
