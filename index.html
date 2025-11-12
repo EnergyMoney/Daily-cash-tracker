@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <!-- Splash -->
   <div id="splash" class="splash">
     <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="splash-logo" alt="cash">
@@ -23,14 +24,14 @@
       </div>
     </header>
 
-    <!-- Identify / current user -->
+    <!-- Identify -->
     <section id="identify" class="card">
-      <label>Enter your phone (for Premium/Restore) — or enter Admin password to set admin:</label>
+      <label>Enter phone (for premium/restore) — or click Admin to set/login</label>
       <div class="row">
-        <input id="phoneInput" placeholder="e.g. 9544599733 (or type 'admin' to set/login)" />
-        <button id="btnSetPhone">Continue</button>
+        <input id="phoneInput" placeholder="e.g. 9544599733" />
+        <button id="btnSetPhone" class="primary">Continue</button>
       </div>
-      <small class="muted">If you want to be admin: press Admin button → set password (first time).</small>
+      <small class="muted">Admin: first set a password in Admin panel (secure locally).</small>
     </section>
 
     <!-- Main UI -->
@@ -43,10 +44,10 @@
             <option value="expense">Expense</option>
             <option value="income">Income</option>
           </select>
-          <input id="amount" type="number" placeholder="Enter amount (₹)" />
+          <input id="amount" type="number" placeholder="Amount (₹)" />
         </div>
 
-        <input id="description" type="text" placeholder="Description (e.g. Food, Transport)" />
+        <input id="description" type="text" placeholder="Description (eg. Food, Rent)" />
 
         <div class="row">
           <select id="paymentMethod">
@@ -92,11 +93,11 @@
   </div>
 
   <!-- Premium Modal -->
-  <div id="premiumModal" class="modal hidden">
+  <div id="premiumModal" class="modal hidden" aria-hidden="true">
     <div class="modal-card">
       <h3>Upgrade to Premium</h3>
       <p>Choose plan — ₹29 (1 month) or ₹299 (3 years)</p>
-      <img id="qrImg" src="" alt="QR" class="qr" />
+      <img id="qrImg" class="qr" alt="QR for UPI payment" />
       <p>UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
 
       <div class="row">
@@ -109,32 +110,36 @@
 
       <div class="row">
         <button id="paidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
-        <button id="closeModal" class="muted">Close</button>
+        <button id="closePremium" class="muted close-btn">Close</button>
       </div>
 
-      <div class="small muted">After payment, press "I Paid" — admin will verify and approve. Admin can also approve via Admin panel.</div>
+      <div class="small muted">After payment press "I Paid" — admin will verify and approve. Admin can also approve via Admin panel.</div>
     </div>
   </div>
 
   <!-- Admin Modal -->
-  <div id="adminModal" class="modal hidden">
+  <div id="adminModal" class="modal hidden" aria-hidden="true">
     <div class="modal-card">
       <h3>Admin Panel</h3>
-      <div>
-        <button id="viewPending">View Pending Payments</button>
-        <button id="approveBtn">Approve Payment</button>
-        <button id="setPassBtn">Set / Change Admin Password</button>
-        <button id="closeAdmin" class="muted">Close</button>
+      <div class="row">
+        <button id="viewPending" class="primary">View Pending Payments</button>
+        <button id="approveBtn" class="primary">Approve Payment</button>
+        <button id="setPassBtn" class="primary">Set / Change Admin Password</button>
+        <button id="closeAdmin" class="muted close-btn">Close</button>
       </div>
 
-      <div id="pendingList" class="pending-list"></div>
+      <div id="pendingList" class="pending-list card"></div>
 
-      <div id="approveArea" class="hidden section">
+      <div id="approveArea" class="card hidden section">
         <input id="approvePhone" placeholder="Phone to approve" />
+        <select id="approvePlan">
+          <option value="29">₹29 (1 month)</option>
+          <option value="299">₹299 (3 years)</option>
+        </select>
         <button id="doApprove" class="primary">Unlock Premium</button>
       </div>
 
-      <div id="setPassArea" class="hidden section">
+      <div id="setPassArea" class="card hidden section">
         <input id="newPass" placeholder="Set new admin password" />
         <button id="savePass" class="primary">Save Password</button>
       </div>
