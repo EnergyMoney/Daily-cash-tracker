@@ -1,46 +1,31 @@
-/* Basic reset */
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, Arial;}
-body{background:linear-gradient(135deg,#f0f7ff,#fffaf0);color:#222;min-height:100vh}
-.splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0072ff,#00c6ff);color:#fff;z-index:99}
-.splash .fly{width:110px;animation:fly 2s ease-in-out infinite alternate}
-.splash h1{margin-top:12px;font-size:1.6rem}
-@keyframes fly{from{transform:translateY(0)}to{transform:translateY(-18px)}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-
+/* style.css - Money Tracker */
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, Arial; margin:0; background: linear-gradient(135deg,#f0faff,#fffaf0); color:#222;}
 .hidden{display:none}
-#app{max-width:720px;margin:40px auto}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:linear-gradient(90deg,#ff6a00,#ee0979);color:#fff;border-radius:12px;margin:20px}
-header h2{font-size:1.15rem}
-.badge{background:#fff3cd;color:#856404;padding:6px 10px;border-radius:12px;font-weight:600;margin-right:10px}
-.small{font-size:0.85rem;color:#555}
-.container{max-width:720px;margin:0 auto;padding:12px}
-
-.identify{background:#fff;padding:16px;border-radius:12px;max-width:720px;margin:12px auto;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
-.identify .row{display:flex;gap:8px;margin-top:10px}
-.identify input{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd}
-.identify button{padding:10px 14px;border-radius:10px;border:none;background:#007bff;color:#fff;cursor:pointer}
-
-.add-section{background:white;padding:18px;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,0.04);margin-top:12px}
-.add-section h3{margin-bottom:8px}
-.add-section select,.add-section input{width:100%;padding:12px;border-radius:10px;border:1px solid #e0e0e0;margin-top:8px}
-.add-section .row{display:flex;gap:8px;margin-top:10px}
-.primary{background:linear-gradient(90deg,#ff6a00,#ee0979);color:white;border:none;padding:12px;border-radius:10px;cursor:pointer}
-.muted{background:#f1f1f1;color:#333;border:none;padding:12px;border-radius:10px;cursor:pointer}
-.info{margin-top:8px;color:#555}
-
-.summary{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:12px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
-.summary div{flex:1;min-width:150px}
-
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-.toolbar button{padding:10px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,#43cea2,#185a9d);color:#fff;cursor:pointer}
-
-.entries{background:#fff;padding:16px;border-radius:12px;margin-top:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
-.entry-row{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #f0f0f0}
-.entry-row:last-child{border-bottom:none}
-.entry-meta{font-size:0.9rem;color:#555}
+.container{max-width:760px;margin:20px auto;padding:0 16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(90deg,#ff6a00,#ee0979);color:white}
+.title{font-size:18px;font-weight:700}
+.top-actions{display:flex;gap:8px;align-items:center}
+.badge{padding:6px 10px;border-radius:12px;background:#fff3cd;color:#856404;font-weight:600}
+.small{font-size:12px}
+.card{background:#fff;padding:14px;border-radius:12px;margin-top:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+.identify .row,.add-section .row,.toolbar{display:flex;gap:8px;align-items:center}
+.row input,.row select,input,select{padding:10px;border-radius:10px;border:1px solid #e6e6e6}
+.primary{background:linear-gradient(90deg,#ff6a00,#ee0979);color:#fff;border:none;padding:10px 14px;border-radius:10px;cursor:pointer}
+.muted{background:#f1f1f1;border:none;padding:10px 14px;border-radius:10px;cursor:pointer;color:#333}
+.add-section input{width:100%}
+.add-section .row select{width:40%}
+.toolbar{justify-content:center;flex-wrap:wrap}
+.toolbar button{padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,#43cea2,#185a9d);color:white;cursor:pointer}
+.entries .entry-row{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #f2f2f2}
+.entry-meta{font-size:14px;color:#444}
 .entry-amt{font-weight:700;color:#222}
-
-.premium-modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:200}
-.modal-card{background:#fff;padding:18px;border-radius:14px;max-width:420px;width:92%;text-align:center}
-.modal-card img{width:200px;border-radius:8px;margin:8px 0}
-footer{margin-top:18px;text-align:center;color:#666;padding:12px}
+.footer{margin-top:20px;text-align:center;color:#666}
+.splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#0072ff,#00c6ff);color:white;z-index:200}
+.splash-logo{width:100px;animation:float 2s infinite ease-in-out}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:300}
+.modal-card{background:white;padding:18px;border-radius:12px;max-width:480px;width:95%}
+.qr{width:220px;border-radius:10px;display:block;margin:10px auto}
+.pending-list{margin-top:10px;text-align:left}
+.section{margin-top:10px}
