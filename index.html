@@ -1,481 +1,199 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Money Tracker (Premium)</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💰 Money Tracker - Visakh</title>
   <style>
-    :root{
-      --bg:#f4f6fb; --card:#ffffff; --accent:#6b5ef8; --accent-2:#8c6bff;
-      --green:#2ecc71; --red:#ff6b6b; --muted:#7a7a86; --glass: rgba(255,255,255,0.7);
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    :root {
+      --green: #22c55e;
+      --primary: #2563eb;
+      --muted: #6b7280;
     }
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#f7f8ff 0%, #f4f6fb 100%);color:#0b0b12}
-    .app{max-width:920px;margin:12px auto;padding:14px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f1ff);display:flex;align-items:center;justify-content:center;font-size:22px}
-    h1{margin:0;font-size:1.25rem}
-    .balance{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:12px;font-weight:700}
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-    .toolbar button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-    .entry-card{background:var(--card);padding:12px;border-radius:14px;box-shadow:0 10px 30px rgba(20,20,60,0.06)}
-    .row{display:flex;gap:8px;margin-bottom:8px}
-    .row input,.row select{flex:1;padding:12px;border-radius:10px;border:1px solid #eef0fb;font-size:0.95rem}
-    .row select{max-width:160px}
-    .actions{display:flex;gap:8px;justify-content:flex-end}
-    button.primary{background:var(--accent);color:#fff;padding:12px;border-radius:12px;border:none;font-weight:700;flex:1}
-    button.ghost{background:#f3f5ff;color:var(--muted);padding:12px;border-radius:12px;border:none;flex:1}
-    .summary{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
-    .card{background:var(--card);padding:10px;border-radius:12px;flex:1;min-width:180px}
-    .card .label{color:var(--muted);font-size:0.85rem}
-    .card .value{font-weight:700;margin-top:8px;font-size:1rem}
-    .history{margin-top:12px}
-    .list{display:flex;flex-direction:column;gap:8px}
-    .item{background:var(--card);padding:10px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 24px rgba(20,20,50,0.03)}
-    .left{display:flex;gap:10px;align-items:center}
-    .chip{padding:6px 8px;border-radius:8px;background:#f0f2ff;color:var(--accent);font-weight:700}
-    .desc{font-weight:600}
-    .meta{color:var(--muted);font-size:0.85rem}
-    .controls{display:flex;gap:6px}
-    .icon-btn{border:1px solid #eee;background:transparent;padding:8px;border-radius:8px;cursor:pointer}
-    .reports{margin-top:12px;background:var(--card);padding:12px;border-radius:12px}
-    .chart-wrap{height:220px}
-    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:0.9rem}
-    .limit-info{margin-top:6px;color:var(--muted)}
-    .premium-badge{background:linear-gradient(90deg,#ffd84a,#ffb84a);padding:6px 10px;border-radius:999px;color:#111;font-weight:700;margin-left:8px}
-    /* modal */
-    .modal{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);padding:18px;z-index:9999}
-    .modal .box{background:white;padding:14px;border-radius:12px;max-width:480px;width:100%}
-    .modal .close{float:right;border:none;background:transparent;font-size:18px;cursor:pointer}
-    .admin-btn{position:fixed;right:12px;bottom:12px;background:#111;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;z-index:999}
-    /* small screens */
-    @media (max-width:640px){
-      .row{flex-direction:column}
-      .toolbar{gap:6px}
-      .logo{width:44px;height:44px}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+      color: #111;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+    }
+    main {
+      padding: 20px;
+      max-width: 480px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: var(--primary);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button.ghost {
+      background: #e5e7eb;
+      color: #111;
+    }
+    input {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    #modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    #modalContent {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #closeModal {
+      float: right;
+      background: transparent;
+      color: #444;
+      font-size: 1.2rem;
+      border: none;
+      cursor: pointer;
     }
   </style>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- jspdf & html2canvas will be loaded at bottom -->
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="brand">
-        <div class="logo">💵</div>
-        <div>
-          <h1>Money Tracker <span style="font-size:12px;color:var(--muted);display:block">by EnergyMoney</span></h1>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center">
-        <div class="balance" id="balance">₹0.00</div>
-        <div id="badgeArea"></div>
-      </div>
-    </header>
 
-    <div class="toolbar" id="toolbar">
-      <button id="exportCsvBtn">Export CSV (Excel)</button>
-      <button id="exportPdfBtn">Export Monthly PDF</button>
-      <button id="dailyReportBtn">Daily Summary</button>
-      <button id="monthlyReportBtn">Monthly Summary</button>
-      <button id="upgradeBtn" style="background:#fff;color:var(--accent);border:1px solid #e6e0ff;font-weight:700">Upgrade ₹29</button>
-    </div>
+<header>💰 Money Tracker</header>
 
-    <section class="entry-card">
-      <div class="row">
-        <select id="type">
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-        <input id="amount" type="number" placeholder="Enter amount (₹)" />
-      </div>
-      <div class="row">
-        <select id="category">
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Bills">Bills</option>
-          <option value="Health">Health</option>
-          <option value="EMI">EMI</option>
-          <option value="Salary">Salary</option>
-          <option value="Others">Others</option>
-        </select>
-        <input id="description" type="text" placeholder="Description" />
-      </div>
-      <div class="row actions">
-        <button id="addBtn" class="primary">Add</button>
-        <button id="clearBtn" class="ghost">Clear All</button>
-      </div>
-      <div class="limit-info" id="limitInfo">Free plan: Max 100 entries / month</div>
-    </section>
+<main>
+  <h2>Welcome, User</h2>
+  <p>Track your daily income and expenses easily.</p>
 
-    <section class="summary">
-      <div class="card"><div class="label">Today's Total</div><div id="todayTotal" class="value">₹0.00</div></div>
-      <div class="card"><div class="label">This Month</div><div id="monthTotal" class="value">₹0.00</div></div>
-      <div class="card"><div class="label">Income vs Expense</div><div id="incExp" class="value">₹0 / ₹0</div></div>
-    </section>
-
-    <section class="history">
-      <h3>History</h3>
-      <div id="historyList" class="list"></div>
-    </section>
-
-    <section class="reports">
-      <h3>Reports</h3>
-      <div class="chart-wrap">
-        <canvas id="catChart"></canvas>
-      </div>
-      <div id="monthlyReport"></div>
-    </section>
-
-    <footer>
-      <small>Local only — data saved on this device. Premium: Export PDF & CSV</small>
-    </footer>
+  <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+    <button onclick="showUpgradeModal()">Upgrade ₹29</button>
+    <button class="ghost" onclick="showAdminPanel()">Admin</button>
   </div>
+</main>
 
-  <!-- Premium / QR Modal -->
-  <div id="modal" class="modal"><div class="box">
-    <button class="close" id="modalClose">✕</button>
-    <div id="modalContent"></div>
-  </div></div>
+<!-- Modal -->
+<div id="modal">
+  <div id="modalContent">
+    <button id="closeModal" onclick="closeModal()">✖</button>
+  </div>
+</div>
 
-  <button id="adminBtn" class="admin-btn">Admin</button>
+<script>
+let modal = document.getElementById("modal");
+let modalContent = document.getElementById("modalContent");
 
-  <!-- app script -->
-  <script>
-  /* Money Tracker - single file app (localStorage) */
-  const STORAGE_KEY = "moneyTracker_v3";
-  const PREMIUM_KEY = "moneyTracker_premiumList_v3";
-  const ENTRY_LIMIT = 100;
-  const ADMIN_PASSWORD = "admin123"; // change later for security
-  const UPI_ID = "visakh@upi"; // change to your UPI id
+// ---------- BASIC VARIABLES ----------
+const UPI_ID = "visakhsivaji95-4@okhdfcbank"; 
+const ADMIN_PASSWORD = "admin123";
+let premiumPhones = []; // Admin added phones
 
-  // DOM
-  const $ = id => document.getElementById(id);
-  const typeEl = $("type"), amountEl = $("amount"), categoryEl = $("category"), descEl = $("description");
-  const addBtn = $("addBtn"), clearBtn = $("clearBtn"), historyList = $("historyList");
-  const balanceEl = $("balance"), todayTotalEl = $("todayTotal"), monthTotalEl = $("monthTotal"), incExpEl = $("incExp");
-  const exportCsvBtn = $("exportCsvBtn"), exportPdfBtn = $("exportPdfBtn"), upgradeBtn = $("upgradeBtn");
-  const badgeArea = $("badgeArea"), limitInfo = $("limitInfo");
-  const modal = $("modal"), modalContent = $("modalContent"), modalClose = $("modalClose");
-  const adminBtn = $("adminBtn"), monthlyReportDiv = $("monthlyReport");
+// ---------- MODAL FUNCTIONS ----------
+function closeModal(){ modal.style.display = "none"; }
 
-  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  let premiumList = JSON.parse(localStorage.getItem(PREMIUM_KEY) || "[]");
-  let catChart = null;
+// ---------- UPGRADE MODAL ----------
+function showUpgradeModal(){
+  const adminPhoneFull = "919544599733";
+  const waText = encodeURIComponent("I have paid ₹29 for Money Tracker Premium. My phone number is: ");
+  const waLink = `https://wa.me/${adminPhoneFull}?text=${waText}`;
 
-  function save(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    localStorage.setItem(PREMIUM_KEY, JSON.stringify(premiumList));
-  }
-  function formatMoney(n){ return "₹" + Number(n).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits:2}); }
-  function monthKeyFor(date = new Date()){ return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`; }
-  function monthLabel(date = new Date()){ return date.toLocaleString('default',{month:'short', year:'numeric'}); }
-
-  // Premium helper
-  function isUserPremium(phone){
-    if(!phone) return false;
-    return premiumList.includes(phone.trim());
-  }
-
-  // Limit count
-  function entriesThisMonthCount(){
-    const mk = monthKeyFor();
-    return entries.filter(e => e.monthKey === mk).length;
-  }
-
-  // Render list
-  function renderList(){
-    historyList.innerHTML = "";
-    const list = [...entries].reverse();
-    list.forEach(item => {
-      const el = document.createElement("div"); el.className = "item";
-      const left = document.createElement("div"); left.className = "left";
-      const chip = document.createElement("div"); chip.className = "chip"; chip.innerText = item.type === "income" ? "Income" : "Expense";
-      const desc = document.createElement("div"); desc.className = "desc"; desc.innerText = `${item.desc} — ${item.category}`;
-      const meta = document.createElement("div"); meta.className = "meta"; meta.innerText = `${new Date(item.ts).toLocaleString()} • ${formatMoney(item.amount)}`;
-      left.appendChild(chip); left.appendChild(desc); left.appendChild(meta);
-
-      const controls = document.createElement("div"); controls.className = "controls";
-      const editBtn = document.createElement("button"); editBtn.className="icon-btn"; editBtn.innerText="Edit";
-      const delBtn = document.createElement("button"); delBtn.className="icon-btn"; delBtn.innerText="Delete";
-
-      delBtn.addEventListener("click", ()=> {
-        if(confirm("Delete this entry?")){
-          const idx = entries.findIndex(e => e.ts === item.ts);
-          if(idx > -1){ entries.splice(idx,1); save(); updateAll(); }
-        }
-      });
-
-      editBtn.addEventListener("click", ()=> {
-        amountEl.value = item.amount;
-        descEl.value = item.desc;
-        categoryEl.value = item.category;
-        typeEl.value = item.type;
-        const idx = entries.findIndex(e => e.ts === item.ts);
-        if(idx > -1){ entries.splice(idx,1); save(); updateAll(); }
-        window.scrollTo({top:0, behavior:"smooth"});
-      });
-
-      controls.appendChild(editBtn); controls.appendChild(delBtn);
-      el.appendChild(left); el.appendChild(controls);
-      historyList.appendChild(el);
-    });
-  }
-
-  // Summary compute
-  function computeSummary(){
-    const now = new Date(); const today = now.toDateString();
-    let todayTotal = 0, monthTotal = 0, incomeTotal = 0, expenseTotal = 0;
-    const mk = monthKeyFor();
-    entries.forEach(e => {
-      const d = new Date(e.ts);
-      const amt = Number(e.amount);
-      if(e.type === "income") incomeTotal += amt; else expenseTotal += amt;
-      if(e.dateStr === today) todayTotal += (e.type === "expense" ? -amt : amt);
-      if(e.monthKey === mk) monthTotal += (e.type === "expense" ? -amt : amt);
-    });
-    balanceEl.innerText = formatMoney(incomeTotal - expenseTotal);
-    todayTotalEl.innerText = formatMoney(todayTotal);
-    monthTotalEl.innerText = formatMoney(monthTotal);
-    incExpEl.innerText = `${formatMoney(incomeTotal)} / ${formatMoney(expenseTotal)}`;
-    limitInfo.innerText = `Entries this month: ${entriesThisMonthCount()} / ${ENTRY_LIMIT} (free)`;
-  }
-
-  // Chart data
-  function buildCategoryData(){
-    const mk = monthKeyFor();
-    const cats = {"Food":0,"Transport":0,"Shopping":0,"Bills":0,"Health":0,"EMI":0,"Salary":0,"Others":0};
-    entries.forEach(e => {
-      if(e.monthKey === mk && e.type === "expense") cats[e.category] = (cats[e.category]||0) + Number(e.amount);
-    });
-    return {categories:Object.keys(cats), values:Object.values(cats)};
-  }
-  function renderChart(){
-    const ctx = document.getElementById('catChart').getContext('2d');
-    const data = buildCategoryData();
-    if(catChart) catChart.destroy();
-    catChart = new Chart(ctx, { type:'doughnut', data:{ labels:data.categories, datasets:[{data:data.values}] }, options:{plugins:{legend:{position:'bottom'}}, maintainAspectRatio:false } });
-  }
-
-  // Monthly table
-  function buildMonthlyReport(){
-    const months = []; const totals = [];
-    const now = new Date();
-    for(let i=5;i>=0;i--){ const d = new Date(now.getFullYear(), now.getMonth()-i, 1); months.push(d.toLocaleString('default',{month:'short', year:'numeric'})); totals.push(0); }
-    entries.forEach(e => { const idx = months.indexOf(e.monthLabel); if(idx>-1) totals[idx] += (e.type==='expense'? -Number(e.amount) : Number(e.amount)); });
-    let html = "<table style='width:100%;border-collapse:collapse'><thead><tr><th style='text-align:left;padding:6px'>Month</th><th style='text-align:right;padding:6px'>Total (₹)</th></tr></thead><tbody>";
-    months.forEach((m,i)=> html += `<tr><td style='padding:6px'>${m}</td><td style='padding:6px;text-align:right'>${formatMoney(totals[i])}</td></tr>`);
-    html += "</tbody></table>";
-    monthlyReportDiv.innerHTML = html;
-  }
-
-  // Main update
-  function updateAll(){ renderList(); computeSummary(); renderChart(); buildMonthlyReport(); save(); renderBadge(); }
-
-  // Monthly limit check
-  function checkLimit(){
-    const mk = monthKeyFor();
-    return entries.filter(e => e.monthKey === mk).length < ENTRY_LIMIT;
-  }
-
-  // Add entry (button)
-  addBtn.addEventListener("click", () => {
-    // limit block for free users
-    const phone = prompt("Enter your phone (for premium check) — leave blank if none");
-    const premium = isUserPremium(phone);
-    if(!premium && !checkLimit()){
-      showUpgradeModal();
-      return;
-    }
-
-    const amt = amountEl.value.trim();
-    const desc = descEl.value.trim();
-    const cat = categoryEl.value;
-    const type = typeEl.value;
-    if(!amt || isNaN(amt)){ alert("Please enter a valid amount"); return; }
-    if(!desc){ alert("Please add description"); return; }
-
-    const now = new Date();
-    const e = { amount: Number(amt), desc, category: cat, type, ts: Date.now(), dateStr: now.toDateString(), monthKey: monthKeyFor(now), monthLabel: monthLabel(now) };
-    entries.push(e);
-    save(); updateAll();
-    amountEl.value=""; descEl.value="";
-  });
-
-  clearBtn.addEventListener("click", () => {
-    if(confirm("Clear all entries? This cannot be undone.")){ entries=[]; save(); updateAll(); }
-  });
-
-  // Export CSV - premium only
-  exportCsvBtn.addEventListener("click", () => {
-    const phone = prompt("Enter your phone to check premium:");
-    if(!isUserPremium(phone)){ showUpgradeModal(); return; }
-    const rows = [["Date","Type","Category","Description","Amount (₹)"]];
-    entries.forEach(e => rows.push([new Date(e.ts).toLocaleString(), e.type, e.category, e.desc, e.amount]));
-    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `moneytracker_export_${monthKeyFor()}.csv`; a.click(); URL.revokeObjectURL(url);
-  });
-
-  // Export PDF - premium only (uses jspdf & html2canvas loaded later)
-  exportPdfBtn.addEventListener("click", async () => {
-    const phone = prompt("Enter your phone to check premium:");
-    if(!isUserPremium(phone)){ showUpgradeModal(); return; }
-    if(!window.jspdf || !window.html2canvas){ alert("PDF libraries not loaded yet. Try again in a few seconds."); return; }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p','pt','a4');
-    const now = new Date();
-    const monthName = now.toLocaleString('default',{month:'long',year:'numeric'});
-
-    // header
-    doc.setFontSize(16); doc.text("Money Tracker — Monthly Report",20,30);
-    doc.setFontSize(11); doc.text(`Generated by EnergyMoney`,20,46);
-    doc.text(`Month: ${monthName}`,20,62);
-
-    // totals
-    let income=0, expense=0;
-    entries.forEach(e => { const d = new Date(e.ts); if(d.getMonth() === now.getMonth() && d.getFullYear()===now.getFullYear()){ if(e.type==='income') income+=Number(e.amount); else expense+=Number(e.amount); }});
-    doc.setFontSize(12); doc.text(`Income: ${formatMoney(income)}`,20,86); doc.text(`Expense: ${formatMoney(expense)}`,20,102); doc.text(`Balance: ${formatMoney(income-expense)}`,20,118);
-
-    // add chart image (screenshot)
-    const canvas = document.getElementById('catChart');
-    try{
-      const img = await html2canvas(canvas, {backgroundColor:null});
-      const imgData = img.toDataURL('image/png');
-      doc.addImage(imgData,'PNG',350,40,200,200);
-    }catch(err){
-      console.warn("Chart capture failed",err);
-    }
-
-    // entries list
-    doc.setFontSize(11);
-    let y = 160;
-    doc.text("Entries:",20,y); y+=12;
-    entries.forEach(e => {
-      const d = new Date(e.ts);
-      if(d.getMonth() === now.getMonth() && d.getFullYear()===now.getFullYear()){
-        const line = `${d.toLocaleDateString()} ${d.toLocaleTimeString()} | ${e.type} | ${e.category} | ${e.desc} | ₹${e.amount}`;
-        doc.text(line,20,y);
-        y += 12;
-        if(y > 760){ doc.addPage(); y = 40; }
-      }
-    });
-
-    // footer with UPI info
-    doc.setFontSize(10);
-    doc.text(`Visakh Payment (UPI): ${UPI_ID}`,20,790);
-    doc.save(`MoneyTracker_Monthly_${monthName}.pdf`);
-  });
-
-  // Upgrade button - opens QR modal
-  upgradeBtn.addEventListener("click", showUpgradeModal);
-
-  function showUpgradeModal(){
-    modalContent.innerHTML = `
-      <h3>Upgrade to Premium — ₹29 / month</h3>
-      <p>Premium features: Export CSV, Export Monthly PDF and more.</p>
-      <div style="display:flex;gap:12px;align-items:center;margin:10px 0">
-        <div style="width:180px;height:180px;border-radius:10px;background:#f7f8ff;display:flex;align-items:center;justify-content:center;flex-direction:column">
-          <!-- simple placeholder QR - replace with your real QR by editing HTML later -->
-          <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-            <rect width="120" height="120" fill="#fff"/>
-            <rect x="8" y="8" width="36" height="36" fill="#111"/>
-            <rect x="76" y="8" width="36" height="36" fill="#111"/>
-            <rect x="8" y="76" width="36" height="36" fill="#111"/>
-            <rect x="50" y="50" width="14" height="14" fill="#111"/>
-            <rect x="70" y="70" width="8" height="8" fill="#111"/>
-          </svg>
-          <small style="margin-top:8px;color:#333">Scan to pay</small>
-        </div>
-        <div>
-          <p style="margin:0 0 6px 0"><strong>Visakh Payment</strong></p>
-          <p style="margin:0 0 6px 0">UPI ID: <strong>${UPI_ID}</strong></p>
-          <p style="margin:0 0 6px 0;color:var(--muted)">After payment, send payer phone number to admin (WhatsApp). Admin will unlock the phone.</p>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="paidBtn" style="background:var(--green);color:#fff;padding:10px;border-radius:8px;border:none">I Paid — Send Phone</button>
-            <button id="wantHelp" class="ghost" style="padding:10px;border-radius:8px">Contact Admin</button>
-          </div>
+  modalContent.innerHTML = `
+    <button id="closeModal" onclick="closeModal()">✖</button>
+    <h3>Upgrade to Premium — ₹29 / month</h3>
+    <p>Premium features: Export CSV, Export Monthly PDF and more.</p>
+    <div style="display:flex;gap:12px;align-items:center;margin:10px 0;flex-wrap:wrap">
+      <div style="width:180px;height:180px;border-radius:10px;background:#f7f8ff;display:flex;align-items:center;justify-content:center;flex-direction:column">
+        <img src="" id="upiQrImg" alt="UPI QR" style="max-width:160px;max-height:160px;display:block;margin:8px 0;" onerror="this.style.display='none'"/>
+        <small style="margin-top:8px;color:#333">Scan to pay using UPI</small>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <p style="margin:0 0 6px 0"><strong>Visakh Payment</strong></p>
+        <p style="margin:0 0 6px 0">UPI ID: <strong>${UPI_ID}</strong></p>
+        <p style="margin:0 0 6px 0;color:var(--muted)">After payment, click <strong>I Paid — Send Phone</strong> and send your phone number on WhatsApp.</p>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button id="paidBtn" style="background:var(--green);color:#fff;padding:10px;border-radius:8px;border:none">I Paid — Send Phone</button>
+          <a href="${waLink}" target="_blank" style="text-decoration:none">
+            <button style="background:#25D366;color:#fff;padding:10px;border-radius:8px;border:none">WhatsApp Admin</button>
+          </a>
         </div>
       </div>
-    `;
-    modal.style.display = "flex";
-    document.getElementById('paidBtn').onclick = ()=> {
-      const phone = prompt("Enter the phone number you used for payment (for admin to unlock):");
-      if(!phone) return alert("Enter phone to continue.");
-      alert("Send this phone number to admin (WhatsApp). Admin will unlock your phone when payment is verified.");
-    };
-    document.getElementById('wantHelp').onclick = ()=> window.open("https://wa.me/?text=I+need+help+to+upgrade+Money+Tracker","");
-  }
+    </div>
+  `;
+  modal.style.display = "flex";
 
-  modalClose.addEventListener("click", ()=> modal.style.display="none");
-  modal.addEventListener("click", (e)=> { if(e.target===modal) modal.style.display="none"; });
+  document.getElementById('paidBtn').onclick = ()=> {
+    const phone = prompt("Enter the phone number you used for payment:");
+    if(!phone) return alert("Please enter your phone number.");
+    const userMsg = encodeURIComponent(`I paid ₹29 for Money Tracker Premium. My phone: ${phone}`);
+    window.open(`https://wa.me/${adminPhoneFull}?text=${userMsg}`, "_blank");
+    alert("WhatsApp opened — send your phone number to Admin for verification.");
+  };
+}
 
-  // Admin panel (bottom-right)
-  adminBtn.addEventListener("click", ()=> {
-    const content = `
-      <h3>Admin — Unlock Premium</h3>
-      <p>Enter admin password to manage premium phones</p>
-      <input id="adminPwd" type="password" placeholder="Admin password" style="width:100%;padding:8px;margin:8px 0" />
-      <div id="adminArea" style="display:none">
-        <p><strong>Premium phones</strong></p>
-        <div id="premiumListArea" style="max-height:160px;overflow:auto;margin-bottom:8px"></div>
-        <input id="newPhone" placeholder="Phone to add e.g. 9999999999" style="width:100%;padding:8px;margin-bottom:8px"/>
-        <div style="display:flex;gap:8px">
-          <button id="addPhone" class="primary">Add Phone</button>
-          <button id="clearPremium" class="ghost">Clear All</button>
-        </div>
-      </div>
-      <div style="text-align:right;margin-top:8px"><button id="closeAdmin" class="ghost">Close</button></div>
-    `;
-    modalContent.innerHTML = content; modal.style.display="flex";
-    const adminPwd = $("adminPwd"), adminArea = $("adminArea"), premiumListArea = $("premiumListArea"), newPhone = $("newPhone");
-    function refreshList(){
-      premiumListArea.innerHTML = premiumList.length ? premiumList.map(p => `<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #f0f0f6">${p} <button data-phone="${p}" class="ghost removeBtn">Remove</button></div>`).join('') : "<div>No premium phones</div>";
-      Array.from(document.getElementsByClassName('removeBtn')).forEach(b=> b.onclick = (ev)=>{ const ph = ev.target.getAttribute('data-phone'); premiumList = premiumList.filter(x=> x!==ph); save(); refreshList(); });
-    }
-    $("closeAdmin").onclick = ()=> modal.style.display="none";
-    adminPwd.onkeypress = (e)=> { if(e.key==='Enter') doLogin(); };
-    function doLogin(){
-      if(adminPwd.value === ADMIN_PASSWORD){ adminArea.style.display = "block"; refreshList(); } else alert("Wrong password");
-    }
-    function tryButtons(){
-      $("addPhone").onclick = ()=> {
-        const ph = newPhone.value.trim();
-        if(!ph) return alert("Enter phone");
-        if(!premiumList.includes(ph)){ premiumList.push(ph); save(); refreshList(); newPhone.value=''; alert("Added"); }
-        else alert("Already premium");
-      };
-      $("clearPremium").onclick = ()=> { if(confirm("Clear all premium phones?")){ premiumList = []; save(); refreshList(); } };
-    }
-    setTimeout(tryButtons,300);
-  });
+// ---------- ADMIN PANEL ----------
+function showAdminPanel(){
+  const pass = prompt("Enter Admin Password:");
+  if(pass !== ADMIN_PASSWORD){ alert("Wrong password"); return; }
 
-  // Render premium badge if any of user's phone in premiumList (we show small UI hint)
-  function renderBadge(){
-    badgeArea.innerHTML = "";
-    if(premiumList.length){
-      const b = document.createElement('div'); b.className='premium-badge'; b.innerText = "PREMIUM";
-      badgeArea.appendChild(b);
-    }
-  }
+  let html = `<button id="closeModal" onclick="closeModal()">✖</button>
+  <h3>Admin Panel</h3>
+  <p>Add or remove premium users (by phone number)</p>
+  <input id="newPhone" placeholder="Enter phone number"/>
+  <div style="display:flex;gap:10px;margin-bottom:10px;">
+    <button onclick="addPhone()">Add</button>
+    <button class="ghost" onclick="removePhone()">Remove</button>
+  </div>
+  <h4>Premium Users:</h4>
+  <ul id="phoneList">${premiumPhones.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+  modalContent.innerHTML = html;
+  modal.style.display = "flex";
+}
 
-  // Init update
-  function init(){ updateAll(); }
-  init();
+function addPhone(){
+  const newP = document.getElementById("newPhone").value.trim();
+  if(!newP) return alert("Enter a number");
+  if(premiumPhones.includes(newP)) return alert("Already added");
+  premiumPhones.push(newP);
+  alert("Added ✅");
+  showAdminPanel();
+}
 
-  // Load jspdf & html2canvas (for PDF) after page load
-  (function loadPdfLibs(){
-    const s1 = document.createElement('script'); s1.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"; document.body.appendChild(s1);
-    const s2 = document.createElement('script'); s2.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"; document.body.appendChild(s2);
-  })();
+function removePhone(){
+  const num = document.getElementById("newPhone").value.trim();
+  if(!num) return alert("Enter a number");
+  premiumPhones = premiumPhones.filter(p=>p!==num);
+  alert("Removed ❌");
+  showAdminPanel();
+}
+</script>
 
-  </script>
 </body>
 </html>
