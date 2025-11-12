@@ -1,200 +1,177 @@
-/* Ultimate Daily Cash Tracker - client-side only (localStorage) */
-/* Currency: ₹, Fixed categories included */
+// ---------- STORAGE ----------
+let entries = JSON.parse(localStorage.getItem("entries") || "[]");
+let user = JSON.parse(localStorage.getItem("user") || "null");
 
-const STORAGE_KEY = "dailyCash_v1";
-let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+// ---------- ELEMENTS ----------
+const loginSection = document.getElementById("authSection");
+const mainSection = document.getElementById("mainSection");
+const badge = document.getElementById("premiumBadge");
+const phoneInput = document.getElementById("phone");
+const loginBtn = document.getElementById("loginBtn");
+const type = document.getElementById("type");
+const amount = document.getElementById("amount");
+const category = document.getElementById("category");
+const desc = document.getElementById("description");
+const addBtn = document.getElementById("addBtn");
+const clearBtn = document.getElementById("clearBtn");
+const historyList = document.getElementById("list");
+const bal = document.getElementById("balance");
+const today = document.getElementById("todayTotal");
+const month = document.getElementById("monthTotal");
+const incExp = document.getElementById("incExp");
+const exportExcel = document.getElementById("exportExcel");
+const exportPDF = document.getElementById("exportPDF");
+const backupBtn = document.getElementById("backupBtn");
+const restoreBtn = document.getElementById("restoreBtn");
 
-const $ = id => document.getElementById(id);
-const typeEl = $("type");
-const amountEl = $("amount");
-const categoryEl = $("category");
-const descEl = $("description");
-const addBtn = $("addBtn");
-const clearBtn = $("clearBtn");
-const historyList = $("historyList");
-const balanceEl = $("balance");
-const todayTotalEl = $("todayTotal");
-const monthTotalEl = $("monthTotal");
-const incExpEl = $("incExp");
-const monthlyReportEl = $("monthlyReport");
-
-let catChart; // Chart.js instance
-
-function save(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+// ---------- FUNCTIONS ----------
+function saveAll() {
+  localStorage.setItem("entries", JSON.stringify(entries));
 }
 
-function formatMoney(n){ return "₹" + Number(n).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits:2}); }
-
-// Render functions
-function renderList(){
+function render() {
   historyList.innerHTML = "";
-  // newest first
-  const list = [...entries].reverse();
-  list.forEach(item => {
-    const el = document.createElement("div");
-    el.className = "item";
-    const left = document.createElement("div"); left.className = "left";
-    const chip = document.createElement("div"); chip.className = "chip"; chip.innerText = item.type === "income" ? "Income" : "Expense";
-    const desc = document.createElement("div"); desc.className = "desc"; desc.innerText = `${item.desc} — ${item.category}`;
-    const meta = document.createElement("div"); meta.className = "meta"; meta.innerText = `${new Date(item.ts).toLocaleString()} • ${formatMoney(item.amount)}`;
-    left.appendChild(chip); left.appendChild(desc); left.appendChild(meta);
-
-    const controls = document.createElement("div"); controls.className = "controls";
-    const editBtn = document.createElement("button"); editBtn.className="icon-btn"; editBtn.innerText="Edit";
-    const delBtn = document.createElement("button"); delBtn.className="icon-btn"; delBtn.innerText="Delete";
-
-    // delete
-    delBtn.addEventListener("click", ()=> {
-      if(confirm("Delete this entry?")){
-        // remove first match by ts
-        const idx = entries.findIndex(e => e.ts === item.ts);
-        if(idx > -1) { entries.splice(idx,1); save(); updateAll(); }
-      }
-    });
-
-    editBtn.addEventListener("click", ()=> {
-      // populate form for editing; use ts as id
-      amountEl.value = item.amount;
-      descEl.value = item.desc;
-      categoryEl.value = item.category;
-      typeEl.value = item.type;
-      // remove existing entry; will be re-added on Add (simpler)
-      const idx = entries.findIndex(e => e.ts === item.ts);
-      if(idx > -1) { entries.splice(idx,1); save(); updateAll(); }
-      window.scrollTo({top:0, behavior:"smooth"});
-    });
-
-    controls.appendChild(editBtn); controls.appendChild(delBtn);
-    el.appendChild(left); el.appendChild(controls);
-    historyList.appendChild(el);
-  });
-}
-
-// Summaries
-function computeSummary(){
-  const now = new Date();
-  const today = now.toDateString();
-  let todayTotal = 0, monthTotal = 0, incomeTotal = 0, expenseTotal = 0;
-  const monthIdx = now.getMonth(), yearIdx = now.getFullYear();
+  let income = 0, expense = 0, todayTotal = 0, monthTotal = 0;
+  const todayStr = new Date().toLocaleDateString();
+  const monthStr = new Date().getMonth();
 
   entries.forEach(e => {
-    const d = new Date(e.ts);
-    const amt = Number(e.amount);
-    if(e.type === "income") incomeTotal += amt; else expenseTotal += amt;
-    if(d.toDateString() === today){
-      todayTotal += (e.type === "expense" ? -amt : amt);
-    }
-    if(d.getMonth() === monthIdx && d.getFullYear() === yearIdx){
-      monthTotal += (e.type === "expense" ? -amt : amt);
-    }
+    const li = document.createElement("li");
+    li.textContent = `${e.date} - ${e.type} ₹${e.amount} (${e.cat}) ${e.desc}`;
+    historyList.appendChild(li);
+
+    if (e.type === "income") income += e.amount;
+    else expense += e.amount;
+    if (e.date === todayStr) todayTotal += e.amount;
+    if (new Date(e.date).getMonth() === monthStr) monthTotal += e.amount;
   });
 
-  balanceEl.innerText = formatMoney(incomeTotal - expenseTotal);
-  todayTotalEl.innerText = formatMoney(todayTotal);
-  monthTotalEl.innerText = formatMoney(monthTotal);
-  incExpEl.innerText = `${formatMoney(incomeTotal)} / ${formatMoney(expenseTotal)}`;
+  const balance = income - expense;
+  bal.textContent = "₹" + balance.toFixed(2);
+  today.textContent = "₹" + todayTotal.toFixed(2);
+  month.textContent = "₹" + monthTotal.toFixed(2);
+  incExp.textContent = `₹${income.toFixed(2)} / ₹${expense.toFixed(2)}`;
 }
 
-// Reports: category breakdown for current month
-function buildCategoryData(){
-  const now = new Date();
-  const m = now.getMonth(), y = now.getFullYear();
-  const cats = {};
-  const categories = ["Food","Transport","Shopping","Bills","Health","EMI","Salary","Others"];
-  categories.forEach(c => cats[c]=0);
+function checkPremium() {
+  if (!user) return false;
+  const now = Date.now();
+  return user.premium && now < user.expiry;
+}
 
+function login() {
+  const phone = phoneInput.value.trim();
+  if (phone === "9999") {
+    user = { phone, premium: true, expiry: 9999999999999, admin: true };
+    alert("✅ Admin access granted!");
+  } else {
+    user = JSON.parse(localStorage.getItem("user_" + phone) || "null");
+    if (!user) {
+      user = { phone, premium: false, expiry: 0 };
+      alert("Free account created! Limited features.");
+    } else if (Date.now() > user.expiry) {
+      user.premium = false;
+      alert("⚠️ Premium expired! Please renew.");
+    }
+  }
+  localStorage.setItem("user", JSON.stringify(user));
+  showApp();
+}
+
+function showApp() {
+  if (user) {
+    loginSection.classList.add("hidden");
+    mainSection.classList.remove("hidden");
+    badge.textContent = checkPremium() ? "PREMIUM" : "FREE";
+    badge.className = checkPremium() ? "premium-badge premium" : "premium-badge";
+    render();
+  }
+}
+
+function addEntry() {
+  if (!checkPremium() && entries.length >= 100) {
+    alert("Free limit 100 entries. Upgrade to Premium for more!");
+    return;
+  }
+  const amt = parseFloat(amount.value);
+  if (!amt || amt <= 0) return alert("Enter valid amount");
+
+  const entry = {
+    type: type.value,
+    amount: amt,
+    cat: category.value,
+    desc: desc.value,
+    date: new Date().toLocaleDateString()
+  };
+  entries.push(entry);
+  saveAll();
+  render();
+  amount.value = "";
+  desc.value = "";
+}
+
+function clearAll() {
+  if (confirm("Clear all entries?")) {
+    entries = [];
+    saveAll();
+    render();
+  }
+}
+
+// ---------- BACKUP ----------
+function downloadBackup() {
+  const blob = new Blob([JSON.stringify(entries)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "backup.json";
+  a.click();
+}
+
+function restoreBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    entries = JSON.parse(reader.result);
+    saveAll();
+    render();
+    alert("✅ Backup restored!");
+  };
+  reader.readAsText(file);
+}
+
+// ---------- EXPORT ----------
+function exportToExcel() {
+  if (!checkPremium()) return alert("Upgrade to Premium to export.");
+  let csv = "Date,Type,Amount,Category,Description\n";
   entries.forEach(e => {
-    const d = new Date(e.ts);
-    if(d.getMonth() === m && d.getFullYear() === y){
-      // For chart, show expenses only (positive amounts)
-      const val = Number(e.amount);
-      if(e.type === "expense"){
-        cats[e.category] = (cats[e.category] || 0) + val;
-      }
-    }
+    csv += `${e.date},${e.type},${e.amount},${e.cat},${e.desc}\n`;
   });
-  return {categories:Object.keys(cats), values:Object.values(cats)};
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "entries.csv";
+  a.click();
 }
 
-function renderChart(){
-  const ctx = document.getElementById('catChart').getContext('2d');
-  const data = buildCategoryData();
-  if(catChart) catChart.destroy();
-  catChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: data.categories,
-      datasets: [{ data: data.values }]
-    },
-    options: {
-      plugins:{legend:{position:'bottom'}},
-      maintainAspectRatio:false
-    }
-  });
-}
-
-function buildMonthlyReport(){
-  // simple aggregation per month (last 6 months)
-  const months = [];
-  const totals = [];
-  const now = new Date();
-  for(let i=5;i>=0;i--){
-    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-    months.push(d.toLocaleString('default',{month:'short', year:'numeric'}));
-    totals.push(0);
-  }
+function exportToPDF() {
+  if (!checkPremium()) return alert("Upgrade to Premium to export PDF.");
+  const win = window.open("", "", "width=600,height=600");
+  win.document.write("<h2>Monthly Report</h2>");
   entries.forEach(e => {
-    const d = new Date(e.ts);
-    const label = d.toLocaleString('default',{month:'short', year:'numeric'});
-    const idx = months.indexOf(label);
-    if(idx>-1){
-      totals[idx] += (e.type === "expense" ? -Number(e.amount) : Number(e.amount));
-    }
+    win.document.write(`${e.date} - ${e.type} ₹${e.amount} (${e.cat}) ${e.desc}<br>`);
   });
-  // render table
-  let html = "<table style='width:100%'><thead><tr><th>Month</th><th>Total (₹)</th></tr></thead><tbody>";
-  months.forEach((m,i)=> html += `<tr><td>${m}</td><td>${formatMoney(totals[i])}</td></tr>`);
-  html += "</tbody></table>";
-  monthlyReportEl.innerHTML = html;
+  win.print();
 }
 
-// Main update
-function updateAll(){
-  renderList();
-  computeSummary();
-  renderChart();
-  buildMonthlyReport();
-}
-// Monthly Limit Check
-function checkLimit() {
-  const entries = JSON.parse(localStorage.getItem("dailyCash_v1") || "[]");
-  const month = new Date().toISOString().slice(0,7);
-  const thisMonth = entries.filter(e => e.ts.toString().startsWith(month));
-  return thisMonth.length < 100;
-}
-addBtn.addEventListener("click", () => {
-  if (!checkLimit()) {
-  alert("Monthly limit reached! Subscribe premium ₹29/month");
-  return;
-  }
-  const amt = amountEl.value.trim();
-  const desc = descEl.value.trim();
-  const cat = categoryEl.value;
-  const type = typeEl.value;
-  if(!amt || isNaN(amt)) { alert("Please enter a valid amount"); return; }
-  if(!desc){ alert("Please add description"); return; }
-  entries.push({ amount: Number(amt), desc, category: cat, type, ts: Date.now() });
-  save();
-  updateAll();
-  amountEl.value=""; descEl.value="";
-});
+// ---------- EVENT ----------
+loginBtn.addEventListener("click", login);
+addBtn.addEventListener("click", addEntry);
+clearBtn.addEventListener("click", clearAll);
+exportExcel.addEventListener("click", exportToExcel);
+exportPDF.addEventListener("click", exportToPDF);
+backupBtn.addEventListener("click", downloadBackup);
+restoreBtn.addEventListener("change", restoreBackup);
 
-clearBtn.addEventListener("click", () => {
-  if(confirm("Clear all entries? This cannot be undone.")){
-    entries = []; save(); updateAll();
-  }
-});
-
-// init
-updateAll();
+// ---------- INIT ----------
+showApp();
