@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Money Tracker 💸</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <div class="splash-screen" id="splash">
+  <div id="splash">
     <h1>💸 Money Tracker</h1>
-    <p>Smart way to manage your income & expense</p>
+    <p>Smart way to manage your income & expenses</p>
   </div>
 
-  <div class="app" id="app" style="display:none;">
+  <div id="app" style="display:none;">
     <header>
       <h2>Money Tracker</h2>
       <button id="upgradeBtn">Upgrade</button>
+      <button id="adminBtn">Admin</button>
     </header>
 
-    <div class="form">
+    <section class="form">
       <select id="type">
         <option value="income">Income</option>
         <option value="expense">Expense</option>
       </select>
-      <input type="number" id="amount" placeholder="Enter amount ₹">
-      <input type="text" id="description" placeholder="Description">
+      <input type="number" id="amount" placeholder="Amount ₹" />
+      <input type="text" id="description" placeholder="Description" />
       <select id="category">
         <option>Food</option><option>Transport</option><option>Shopping</option>
         <option>Bills</option><option>Health</option><option>Salary</option><option>Others</option>
       </select>
-      <button id="addBtn">Add</button>
-    </div>
+      <button id="addBtn">Add Entry</button>
+    </section>
 
-    <div class="summary">
-      <p><b>Today:</b> <span id="todayTotal">₹0.00</span></p>
-      <p><b>Month:</b> <span id="monthTotal">₹0.00</span></p>
-      <p><b>Balance:</b> <span id="balance">₹0.00</span></p>
-      <p><b>Income / Expense:</b> <span id="incExp">₹0 / ₹0</span></p>
-    </div>
+    <section class="summary">
+      <p><b>Today:</b> <span id="todayTotal">₹0</span></p>
+      <p><b>Month:</b> <span id="monthTotal">₹0</span></p>
+      <p><b>Balance:</b> <span id="balance">₹0</span></p>
+      <p><b>Income/Expense:</b> <span id="incExp">₹0/₹0</span></p>
+    </section>
 
     <canvas id="catChart"></canvas>
+
     <div id="historyList"></div>
 
     <div class="btn-group">
@@ -52,19 +53,37 @@
   </div>
 
   <!-- Upgrade Popup -->
-  <div id="upgradePopup" class="popup" style="display:none;">
+  <div id="upgradePopup" class="popup">
     <div class="popup-content">
       <h3>Upgrade to Premium</h3>
-      <p>Choose plan - ₹29 (30 days) or ₹299 (3 years)</p>
-      <button id="plan30">₹29 - 30 Days</button>
-      <button id="plan1095">₹299 - 3 Years</button>
-      <p>After payment, tap "I Paid"</p>
-      <a id="whatsappBtn" href="https://wa.me/919544599733?text=I%20Paid%20for%20Premium%20MoneyTracker" target="_blank">📩 I Paid - Notify Admin</a>
+      <p>Choose plan:</p>
+      <button id="plan30">₹29 – 30 Days</button>
+      <button id="plan1095">₹299 – 3 Years</button>
+      <img src="qr.png" alt="UPI QR" style="width:140px;height:140px;margin:10px;">
+      <a id="whatsappBtn" href="https://wa.me/919544599733?text=I%20Paid%20for%20Premium%20Money Tracker" target="_blank">📩 I Paid – Notify Admin</a>
       <button id="closePopup">Close</button>
     </div>
   </div>
 
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="popup">
+    <div class="popup-content">
+      <h3>Admin Panel</h3>
+      <input type="password" id="adminPass" placeholder="Enter admin password" />
+      <button id="loginAdmin">Login</button>
+      <div id="adminArea" style="display:none;">
+        <h4>Pending Payments</h4>
+        <ul id="pendingList"></ul>
+        <button id="setExpiryBtn">Approve & Set Expiry</button>
+      </div>
+      <button id="closeAdmin">Close</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
