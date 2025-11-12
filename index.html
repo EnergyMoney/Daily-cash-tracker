@@ -1,199 +1,418 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💰 Money Tracker - Visakh</title>
-  <style>
-    :root {
-      --green: #22c55e;
-      --primary: #2563eb;
-      --muted: #6b7280;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8fafc;
-      color: #111;
-    }
-    header {
-      background: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 12px;
-      font-size: 1.3rem;
-      letter-spacing: 0.5px;
-    }
-    main {
-      padding: 20px;
-      max-width: 480px;
-      margin: auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-top: 20px;
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    button {
-      cursor: pointer;
-      border: none;
-      background: var(--primary);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button.ghost {
-      background: #e5e7eb;
-      color: #111;
-    }
-    input {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    #modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-    #modalContent {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    #closeModal {
-      float: right;
-      background: transparent;
-      color: #444;
-      font-size: 1.2rem;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Visakh Money Tracker</title>
+
+<!-- Fonts + Chart.js -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --accent:#6b5ef8; --accent2:#8c6bff;
+    --muted:#6b7280; --green:#16a34a; --danger:#ef4444;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#eef2ff,#f4f7fb);color:#0b1220}
+  /* splash */
+  #splash{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#111827);
+    color:#fff; flex-direction:column;
+  }
+  .cash-wrap{position:relative;width:260px;height:120px;overflow:visible}
+  .cash{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:48px; opacity:0;
+    animation:fly 1700ms ease-in-out forwards;
+  }
+  .cash.c1{animation-delay:0}
+  .cash.c2{animation-delay:250ms}
+  .cash.c3{animation-delay:500ms}
+  @keyframes fly{
+    0%{transform:translate(-50%,60%) scale(.6) rotate(-10deg); opacity:0}
+    40%{opacity:1; transform:translate(-50%,-10%) scale(1.05) rotate(3deg)}
+    100%{transform:translate(-50%,-180%) scale(.85) rotate(-6deg); opacity:0}
+  }
+  .splash-title{font-size:20px;margin-top:6px;font-weight:700;opacity:.95}
+  .splash-sub{opacity:.85;font-size:13px;margin-top:6px}
+  /* app */
+  .app{max-width:920px;margin:16px auto;padding:12px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 6px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f1ff);display:flex;align-items:center;justify-content:center;font-size:22px}
+  h1{margin:0;font-size:18px}
+  .balance{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;padding:8px 12px;border-radius:12px;font-weight:700}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .toolbar button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+  .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 10px 30px rgba(20,20,60,0.04)}
+  .entry-card{display:block}
+  .row{display:flex;gap:8px;margin-bottom:8px}
+  .row input,.row select{flex:1;padding:12px;border-radius:10px;border:1px solid #eef0fb;font-size:0.95rem}
+  .row select{max-width:160px}
+  .actions{display:flex;gap:8px;justify-content:flex-end}
+  button.primary{background:var(--accent);color:#fff;padding:12px;border-radius:12px;border:none;font-weight:700;flex:1}
+  button.ghost{background:#f3f5ff;color:var(--muted);padding:12px;border-radius:12px;border:none;flex:1}
+  .summary{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
+  .summary .card{flex:1;min-width:180px}
+  .list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .item{background:var(--card);padding:10px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 24px rgba(20,20,50,0.03)}
+  .chip{padding:6px 8px;border-radius:8px;background:#f0f2ff;color:var(--accent);font-weight:700}
+  .controls{display:flex;gap:6px}
+  .icon-btn{border:1px solid #eee;background:transparent;padding:8px;border-radius:8px;cursor:pointer}
+  .reports{margin-top:12px}
+  .chart-wrap{height:220px}
+  footer{text-align:center;color:var(--muted);margin-top:14px}
+  .premium-badge{background:linear-gradient(90deg,#ffd84a,#ffb84a);padding:6px 10px;border-radius:999px;color:#111;font-weight:700}
+  /* modal */
+  .modal{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);padding:18px;z-index:9999}
+  .modal .box{background:white;padding:14px;border-radius:12px;max-width:520px;width:100%}
+  .modal .close{float:right;border:none;background:transparent;font-size:18px;cursor:pointer}
+  .admin-btn{position:fixed;right:12px;bottom:12px;background:#111;color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;z-index:999}
+  @media (max-width:640px){
+    .row{flex-direction:column}
+    .toolbar{gap:6px}
+    .logo{width:44px;height:44px}
+  }
+</style>
 </head>
 <body>
 
-<header>💰 Money Tracker</header>
-
-<main>
-  <h2>Welcome, User</h2>
-  <p>Track your daily income and expenses easily.</p>
-
-  <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-    <button onclick="showUpgradeModal()">Upgrade ₹29</button>
-    <button class="ghost" onclick="showAdminPanel()">Admin</button>
+<!-- Splash screen with flying cash -->
+<div id="splash">
+  <div class="cash-wrap" aria-hidden="true">
+    <div class="cash c1">💸</div>
+    <div class="cash c2">💵</div>
+    <div class="cash c3">🧾</div>
   </div>
-</main>
-
-<!-- Modal -->
-<div id="modal">
-  <div id="modalContent">
-    <button id="closeModal" onclick="closeModal()">✖</button>
-  </div>
+  <div class="splash-title">Visakh Money Tracker</div>
+  <div class="splash-sub">Smart. Simple. Secure.</div>
 </div>
 
+<div class="app" style="display:none">
+  <header>
+    <div class="brand">
+      <div class="logo">💵</div>
+      <div>
+        <h1>Visakh Money Tracker <div style="font-size:12px;color:var(--muted)">by EnergyMoney</div></h1>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center">
+      <div class="balance" id="balance">₹0.00</div>
+      <div id="badgeArea" style="margin-left:10px"></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <button id="exportCsvBtn">Export CSV (Excel)</button>
+    <button id="exportPdfBtn">Export Monthly PDF</button>
+    <button id="dailyReportBtn">Daily Summary</button>
+    <button id="monthlyReportBtn">Monthly Summary</button>
+    <button id="upgradeBtn" style="background:#fff;color:var(--accent);border:1px solid #e6e0ff;font-weight:700">Upgrade ₹29</button>
+  </div>
+
+  <section class="card entry-card">
+    <div class="row">
+      <select id="type">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+      <input id="amount" type="number" placeholder="Enter amount (₹)" />
+    </div>
+    <div class="row">
+      <select id="category">
+        <option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Health</option><option>EMI</option><option>Salary</option><option>Others</option>
+      </select>
+      <input id="description" type="text" placeholder="Description" />
+    </div>
+    <div class="row actions">
+      <button id="addBtn" class="primary">Add</button>
+      <button id="clearBtn" class="ghost">Clear All</button>
+    </div>
+    <div class="limit-info" id="limitInfo">Free plan: Max 100 entries / month</div>
+  </section>
+
+  <section class="summary" style="margin-top:12px">
+    <div class="card"><div class="label">Today's Total</div><div id="todayTotal" class="value">₹0.00</div></div>
+    <div class="card"><div class="label">This Month</div><div id="monthTotal" class="value">₹0.00</div></div>
+    <div class="card"><div class="label">Income vs Expense</div><div id="incExp" class="value">₹0 / ₹0</div></div>
+  </section>
+
+  <section class="history">
+    <h3>History</h3>
+    <div id="historyList" class="list"></div>
+  </section>
+
+  <section class="reports card">
+    <h3>Reports</h3>
+    <div class="chart-wrap"><canvas id="catChart"></canvas></div>
+    <div id="monthlyReport" style="margin-top:12px"></div>
+  </section>
+
+  <footer>Local only — data saved on this device. Premium: Export PDF & CSV</footer>
+</div>
+
+<!-- Upgrade / QR Modal -->
+<div id="modal" class="modal"><div class="box">
+  <button class="close" id="modalClose">✕</button>
+  <div id="modalContent"></div>
+</div></div>
+
+<button id="adminBtn" class="admin-btn">Admin</button>
+
+<!-- Libraries (PDF libs loaded later) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script>
-let modal = document.getElementById("modal");
-let modalContent = document.getElementById("modalContent");
+/* Visakh Money Tracker - single file app */
 
-// ---------- BASIC VARIABLES ----------
-const UPI_ID = "visakhsivaji95-4@okhdfcbank"; 
+// CONFIG
+const STORAGE_KEY = "visakh_money_v1";
+const PREMIUM_KEY = "visakh_premium_v1";
+const ENTRY_LIMIT = 100;
 const ADMIN_PASSWORD = "admin123";
-let premiumPhones = []; // Admin added phones
+const ADMIN_PHONE_FULL = "919544599733"; // WhatsApp admin
+const UPI_ID = "visakhsivaji95-4@okhdfcbank";
 
-// ---------- MODAL FUNCTIONS ----------
-function closeModal(){ modal.style.display = "none"; }
+// DOM
+const appDiv = document.querySelector('.app');
+const $ = id => document.getElementById(id);
+const typeEl = $("type"), amountEl = $("amount"), categoryEl = $("category"), descEl = $("description");
+const addBtn = $("addBtn"), clearBtn = $("clearBtn"), historyList = $("historyList");
+const balanceEl = $("balance"), todayTotalEl = $("todayTotal"), monthTotalEl = $("monthTotal"), incExpEl = $("incExp");
+const exportCsvBtn = $("exportCsvBtn"), exportPdfBtn = $("exportPdfBtn"), upgradeBtn = $("upgradeBtn");
+const modal = $("modal"), modalContent = $("modalContent"), modalClose = $("modalClose");
+const adminBtn = $("adminBtn"), monthlyReportEl = $("monthlyReport");
+const badgeArea = $("badgeArea"), limitInfo = $("limitInfo");
 
-// ---------- UPGRADE MODAL ----------
+let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+let premiumList = JSON.parse(localStorage.getItem(PREMIUM_KEY) || "[]");
+let catChart;
+
+// helper
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); localStorage.setItem(PREMIUM_KEY, JSON.stringify(premiumList)); }
+function formatMoney(n){ return "₹" + Number(n).toLocaleString('en-IN', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+function monthKeyFor(date=new Date()){ return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`; }
+function monthLabel(date=new Date()){ return date.toLocaleString('default',{month:'short', year:'numeric'}); }
+
+// splash hide after 1.8s then show app
+setTimeout(()=>{ document.getElementById('splash').style.display='none'; appDiv.style.display='block'; }, 1800);
+
+// premium helpers
+function isUserPremium(phone){ if(!phone) return false; return premiumList.includes(phone.trim()); }
+function entriesThisMonthCount(){ const mk = monthKeyFor(); return entries.filter(e => e.monthKey === mk).length; }
+
+// render list
+function renderList(){
+  historyList.innerHTML = "";
+  const list = [...entries].reverse();
+  list.forEach(item=>{
+    const el = document.createElement('div'); el.className='item';
+    const left = document.createElement('div'); left.className='left';
+    const chip = document.createElement('div'); chip.className='chip'; chip.innerText = item.type === 'income' ? 'Income' : 'Expense';
+    const desc = document.createElement('div'); desc.className='desc'; desc.innerText = `${item.desc} — ${item.category}`;
+    const meta = document.createElement('div'); meta.className='meta'; meta.innerText = `${new Date(item.ts).toLocaleString()} • ${formatMoney(item.amount)}`;
+    left.appendChild(chip); left.appendChild(desc); left.appendChild(meta);
+    const controls = document.createElement('div'); controls.className='controls';
+    const editBtn = document.createElement('button'); editBtn.className='icon-btn'; editBtn.innerText='Edit';
+    const delBtn = document.createElement('button'); delBtn.className='icon-btn'; delBtn.innerText='Delete';
+
+    delBtn.addEventListener('click', ()=>{
+      if(confirm('Delete this entry?')){
+        const idx = entries.findIndex(e => e.ts === item.ts);
+        if(idx>-1){ entries.splice(idx,1); save(); updateAll(); }
+      }
+    });
+    editBtn.addEventListener('click', ()=>{
+      amountEl.value = item.amount; descEl.value = item.desc; categoryEl.value = item.category; typeEl.value = item.type;
+      const idx = entries.findIndex(e => e.ts === item.ts); if(idx>-1){ entries.splice(idx,1); save(); updateAll(); }
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    controls.appendChild(editBtn); controls.appendChild(delBtn);
+    el.appendChild(left); el.appendChild(controls);
+    historyList.appendChild(el);
+  });
+}
+
+// compute summary
+function computeSummary(){
+  const now = new Date(); const today = now.toDateString();
+  let todayTotal=0, monthTotal=0, incomeTotal=0, expenseTotal=0;
+  const mk = monthKeyFor();
+  entries.forEach(e=>{
+    const d = new Date(e.ts); const amt = Number(e.amount);
+    if(e.type==='income') incomeTotal += amt; else expenseTotal += amt;
+    if(e.dateStr === today) todayTotal += (e.type==='expense' ? -amt : amt);
+    if(e.monthKey === mk) monthTotal += (e.type==='expense' ? -amt : amt);
+  });
+  balanceEl.innerText = formatMoney(incomeTotal - expenseTotal);
+  todayTotalEl.innerText = formatMoney(todayTotal);
+  monthTotalEl.innerText = formatMoney(monthTotal);
+  incExpEl.innerText = `${formatMoney(incomeTotal)} / ${formatMoney(expenseTotal)}`;
+  limitInfo.innerText = `Entries this month: ${entriesThisMonthCount()} / ${ENTRY_LIMIT} (free)`;
+}
+
+// chart
+function buildCategoryData(){
+  const mk = monthKeyFor(); const cats={"Food":0,"Transport":0,"Shopping":0,"Bills":0,"Health":0,"EMI":0,"Salary":0,"Others":0};
+  entries.forEach(e=>{ if(e.monthKey===mk && e.type==='expense') cats[e.category] = (cats[e.category]||0) + Number(e.amount); });
+  return {categories:Object.keys(cats), values:Object.values(cats)};
+}
+function renderChart(){
+  const ctx = document.getElementById('catChart').getContext('2d'); const data = buildCategoryData();
+  if(catChart) catChart.destroy();
+  catChart = new Chart(ctx,{ type:'doughnut', data:{ labels:data.categories, datasets:[{data:data.values}] }, options:{plugins:{legend:{position:'bottom'}}, maintainAspectRatio:false } });
+}
+
+// monthly table
+function buildMonthlyReport(){
+  const months=[]; const totals=[];
+  const now = new Date();
+  for(let i=5;i>=0;i--){ const d = new Date(now.getFullYear(), now.getMonth()-i,1); months.push(d.toLocaleString('default',{month:'short',year:'numeric'})); totals.push(0); }
+  entries.forEach(e=>{ const idx = months.indexOf(e.monthLabel); if(idx>-1) totals[idx] += (e.type==='expense' ? -Number(e.amount) : Number(e.amount)); });
+  let html = "<table style='width:100%;border-collapse:collapse'><thead><tr><th style='text-align:left;padding:6px'>Month</th><th style='text-align:right;padding:6px'>Total (₹)</th></tr></thead><tbody>";
+  months.forEach((m,i)=> html += `<tr><td style='padding:6px'>${m}</td><td style='padding:6px;text-align:right'>${formatMoney(totals[i])}</td></tr>`);
+  html += "</tbody></table>";
+  monthlyReportEl.innerHTML = html;
+}
+
+// update all
+function updateAll(){ renderList(); computeSummary(); renderChart(); buildMonthlyReport(); save(); renderBadge(); }
+
+// limit
+function checkLimit(){ const mk = monthKeyFor(); return entries.filter(e => e.monthKey === mk).length < ENTRY_LIMIT; }
+
+// add entry
+addBtn.addEventListener('click', ()=>{
+  // ask for phone to decide premium (simple flow)
+  const phone = prompt('Enter your phone (for premium check) — leave blank if none');
+  const premium = isUserPremium(phone);
+  if(!premium && !checkLimit()){ showUpgradeModal(); return; }
+
+  const amt = amountEl.value.trim(); const desc = descEl.value.trim(); const cat = categoryEl.value; const type = typeEl.value;
+  if(!amt || isNaN(amt)){ alert('Please enter a valid amount'); return; } if(!desc){ alert('Please add description'); return; }
+  const now = new Date();
+  const e = { amount:Number(amt), desc, category:cat, type, ts: Date.now(), dateStr: now.toDateString(), monthKey: monthKeyFor(now), monthLabel: monthLabel(now) };
+  entries.push(e); save(); updateAll();
+  amountEl.value=''; descEl.value='';
+});
+
+// clear
+clearBtn.addEventListener('click', ()=> { if(confirm('Clear all entries? This cannot be undone.')){ entries=[]; save(); updateAll(); } });
+
+// export CSV (premium)
+exportCsvBtn.addEventListener('click', ()=>{
+  const phone = prompt('Enter your phone to check premium:');
+  if(!isUserPremium(phone)){ showUpgradeModal(); return; }
+  const rows = [["Date","Type","Category","Description","Amount (₹)"]];
+  entries.forEach(e => rows.push([new Date(e.ts).toLocaleString(), e.type, e.category, e.desc, e.amount]));
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `moneytracker_export_${monthKeyFor()}.csv`; a.click(); URL.revokeObjectURL(url);
+});
+
+// export PDF (premium)
+exportPdfBtn.addEventListener('click', async ()=>{
+  const phone = prompt('Enter your phone to check premium:');
+  if(!isUserPremium(phone)){ showUpgradeModal(); return; }
+  if(!window.jspdf || !window.html2canvas){ alert('PDF libraries not loaded yet. Try again.'); return; }
+  const { jsPDF } = window.jspdf; const doc = new jsPDF('p','pt','a4'); const now = new Date(); const monthName = now.toLocaleString('default',{month:'long',year:'numeric'});
+  doc.setFontSize(16); doc.text('Visakh Money Tracker — Monthly Report',20,30); doc.setFontSize(11); doc.text(`Month: ${monthName}`,20,46);
+  let income=0, expense=0;
+  entries.forEach(e => { const d=new Date(e.ts); if(d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()){ if(e.type==='income') income+=Number(e.amount); else expense+=Number(e.amount); }});
+  doc.setFontSize(12); doc.text(`Income: ${formatMoney(income)}`,20,86); doc.text(`Expense: ${formatMoney(expense)}`,20,102); doc.text(`Balance: ${formatMoney(income-expense)}`,20,118);
+  // chart image
+  const canvas = document.getElementById('catChart');
+  try{
+    const img = await html2canvas(canvas, {backgroundColor:null}); const imgData = img.toDataURL('image/png');
+    doc.addImage(imgData,'PNG',350,40,200,200);
+  }catch(err){ console.warn('Chart capture failed',err); }
+  // entries
+  doc.setFontSize(11); let y=160; doc.text('Entries:',20,y); y+=12;
+  entries.forEach(e => { const d=new Date(e.ts); if(d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()){ const line = `${d.toLocaleDateString()} ${d.toLocaleTimeString()} | ${e.type} | ${e.category} | ${e.desc} | ₹${e.amount}`; doc.text(line,20,y); y+=12; if(y>760){ doc.addPage(); y=40; } } });
+  doc.setFontSize(10); doc.text(`Visakh Payment (UPI): ${UPI_ID}`,20,790);
+  doc.save(`MoneyTracker_Monthly_${monthName}.pdf`);
+});
+
+// Upgrade modal - shows QR and WA
 function showUpgradeModal(){
-  const adminPhoneFull = "919544599733";
-  const waText = encodeURIComponent("I have paid ₹29 for Money Tracker Premium. My phone number is: ");
-  const waLink = `https://wa.me/${adminPhoneFull}?text=${waText}`;
-
   modalContent.innerHTML = `
-    <button id="closeModal" onclick="closeModal()">✖</button>
+    <button class="close" id="modalCloseInner">✕</button>
     <h3>Upgrade to Premium — ₹29 / month</h3>
     <p>Premium features: Export CSV, Export Monthly PDF and more.</p>
     <div style="display:flex;gap:12px;align-items:center;margin:10px 0;flex-wrap:wrap">
       <div style="width:180px;height:180px;border-radius:10px;background:#f7f8ff;display:flex;align-items:center;justify-content:center;flex-direction:column">
-        <img src="" id="upiQrImg" alt="UPI QR" style="max-width:160px;max-height:160px;display:block;margin:8px 0;" onerror="this.style.display='none'"/>
+        <img src="upi_qr.png" alt="UPI QR" style="max-width:160px;max-height:160px;display:block;margin:8px 0;" onerror="this.style.display='none'"/>
         <small style="margin-top:8px;color:#333">Scan to pay using UPI</small>
       </div>
       <div style="flex:1;min-width:200px">
         <p style="margin:0 0 6px 0"><strong>Visakh Payment</strong></p>
         <p style="margin:0 0 6px 0">UPI ID: <strong>${UPI_ID}</strong></p>
-        <p style="margin:0 0 6px 0;color:var(--muted)">After payment, click <strong>I Paid — Send Phone</strong> and send your phone number on WhatsApp.</p>
+        <p style="margin:0 0 6px 0;color:var(--muted)">After payment, click <strong>I Paid — Send Phone</strong> and send the phone number you paid from. Admin will verify and unlock you.</p>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
           <button id="paidBtn" style="background:var(--green);color:#fff;padding:10px;border-radius:8px;border:none">I Paid — Send Phone</button>
-          <a href="${waLink}" target="_blank" style="text-decoration:none">
-            <button style="background:#25D366;color:#fff;padding:10px;border-radius:8px;border:none">WhatsApp Admin</button>
-          </a>
+          <button id="contactAdmin" class="ghost" style="padding:10px;border-radius:8px">Contact Admin</button>
+          <a id="waLinkBtn" href="https://wa.me/${ADMIN_PHONE_FULL}?text=I+need+help+to+upgrade+Money+Tracker" target="_blank" style="text-decoration:none"><button style="background:#25D366;color:#fff;padding:10px;border-radius:8px;border:none">WhatsApp Admin</button></a>
         </div>
       </div>
     </div>
   `;
-  modal.style.display = "flex";
-
+  modal.style.display='flex';
+  document.getElementById('modalCloseInner').onclick = ()=> modal.style.display='none';
+  document.getElementById('contactAdmin').onclick = ()=> window.open(`https://wa.me/${ADMIN_PHONE_FULL}`,'_blank');
   document.getElementById('paidBtn').onclick = ()=> {
-    const phone = prompt("Enter the phone number you used for payment:");
-    if(!phone) return alert("Please enter your phone number.");
+    const phone = prompt('Enter the phone number you used for payment (include country code or 10-digit):');
+    if(!phone) return alert('Please enter phone number');
     const userMsg = encodeURIComponent(`I paid ₹29 for Money Tracker Premium. My phone: ${phone}`);
-    window.open(`https://wa.me/${adminPhoneFull}?text=${userMsg}`, "_blank");
-    alert("WhatsApp opened — send your phone number to Admin for verification.");
+    window.open(`https://wa.me/${ADMIN_PHONE_FULL}?text=${userMsg}`, '_blank');
+    alert('WhatsApp opened with prefilled message. After admin verifies, they will add your phone as premium.');
   };
 }
 
-// ---------- ADMIN PANEL ----------
-function showAdminPanel(){
-  const pass = prompt("Enter Admin Password:");
-  if(pass !== ADMIN_PASSWORD){ alert("Wrong password"); return; }
+// Admin panel
+adminBtn.addEventListener('click', ()=> {
+  const pass = prompt('Enter admin password:');
+  if(pass !== ADMIN_PASSWORD){ alert('Wrong password'); return; }
+  // show admin modal content
+  modalContent.innerHTML = `
+    <button class="close" id="admClose">✕</button>
+    <h3>Admin — Manage Premium Phones</h3>
+    <p>Add phone numbers (10 or with country code) to unlock premium features.</p>
+    <input id="newPhone" placeholder="Phone to add e.g. 9198xxxxxxx" />
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="addPhone" style="background:var(--accent);color:#fff;padding:8px;border-radius:8px;border:none">Add Phone</button>
+      <button id="clearPremium" class="ghost" style="padding:8px;border-radius:8px">Clear All</button>
+    </div>
+    <div style="margin-top:12px"><strong>Premium phones:</strong><div id="premiumListArea" style="max-height:160px;overflow:auto;margin-top:8px"></div></div>
+  `;
+  modal.style.display='flex';
+  document.getElementById('admClose').onclick = ()=> modal.style.display='none';
+  const premiumListArea = document.getElementById('premiumListArea');
+  function refreshList(){ premiumListArea.innerHTML = premiumList.length ? premiumList.map(p => `<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #f0f0f6">${p} <button data-phone="${p}" class="ghost removeBtn">Remove</button></div>`).join('') : '<div>No premium phones</div>'; Array.from(document.getElementsByClassName('removeBtn')).forEach(b=> b.onclick = ev => { const ph = ev.target.getAttribute('data-phone'); premiumList = premiumList.filter(x=> x!==ph); save(); refreshList(); }); }
+  refreshList();
+  document.getElementById('addPhone').onclick = ()=> {
+    const ph = document.getElementById('newPhone').value.trim();
+    if(!ph) return alert('Enter phone'); if(!premiumList.includes(ph)){ premiumList.push(ph); save(); refreshList(); alert('Added'); } else alert('Already premium');
+  };
+  document.getElementById('clearPremium').onclick = ()=> { if(confirm('Clear all premium phones?')){ premiumList = []; save(); refreshList(); } };
+});
 
-  let html = `<button id="closeModal" onclick="closeModal()">✖</button>
-  <h3>Admin Panel</h3>
-  <p>Add or remove premium users (by phone number)</p>
-  <input id="newPhone" placeholder="Enter phone number"/>
-  <div style="display:flex;gap:10px;margin-bottom:10px;">
-    <button onclick="addPhone()">Add</button>
-    <button class="ghost" onclick="removePhone()">Remove</button>
-  </div>
-  <h4>Premium Users:</h4>
-  <ul id="phoneList">${premiumPhones.map(p=>`<li>${p}</li>`).join('')}</ul>`;
-  modalContent.innerHTML = html;
-  modal.style.display = "flex";
-}
+// render premium badge
+function renderBadge(){ badgeArea.innerHTML = ''; if(premiumList.length){ const b = document.createElement('div'); b.className='premium-badge'; b.innerText='PREMIUM'; badgeArea.appendChild(b); } }
 
-function addPhone(){
-  const newP = document.getElementById("newPhone").value.trim();
-  if(!newP) return alert("Enter a number");
-  if(premiumPhones.includes(newP)) return alert("Already added");
-  premiumPhones.push(newP);
-  alert("Added ✅");
-  showAdminPanel();
-}
+// upgrade button
+upgradeBtn.addEventListener('click', showUpgradeModal);
 
-function removePhone(){
-  const num = document.getElementById("newPhone").value.trim();
-  if(!num) return alert("Enter a number");
-  premiumPhones = premiumPhones.filter(p=>p!==num);
-  alert("Removed ❌");
-  showAdminPanel();
-}
+// init update
+function init(){ updateAll(); }
+init();
+
+// load libs already included above - jsPDF/html2canvas included in header script tags
+modalClose.addEventListener('click', ()=> modal.style.display='none');
+
 </script>
-
 </body>
 </html>
