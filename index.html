@@ -4,107 +4,142 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Money Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Splash -->
   <div id="splash" class="splash">
-    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="fly" alt="cash">
+    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="splash-logo" alt="cash">
     <h1>Money Tracker</h1>
   </div>
 
-  <main id="app" class="hidden">
-    <header>
-      <h2>Money Tracker</h2>
-      <div class="top-right">
+  <!-- App -->
+  <div id="app" class="hidden container">
+    <header class="topbar">
+      <div class="title">Money Tracker</div>
+      <div class="top-actions">
         <span id="badge" class="badge">FREE</span>
         <button id="adminBtn" class="small">Admin</button>
       </div>
     </header>
 
-    <section class="identify">
-      <label>Enter your phone (for premium / restore):</label>
+    <!-- Identify / current user -->
+    <section id="identify" class="card">
+      <label>Enter your phone (for Premium/Restore) — or enter Admin password to set admin:</label>
       <div class="row">
-        <input id="userPhone" type="text" placeholder="e.g. 9846xxxxxx or 9999 for admin">
-        <button id="btnIdentify">Continue</button>
+        <input id="phoneInput" placeholder="e.g. 9544599733 (or type 'admin' to set/login)" />
+        <button id="btnSetPhone">Continue</button>
       </div>
-      <small>Admin password = <b>9999</b></small>
+      <small class="muted">If you want to be admin: press Admin button → set password (first time).</small>
     </section>
 
-    <section id="mainUI" class="hidden container">
-
-      <div class="add-section">
+    <!-- Main UI -->
+    <section id="mainUI" class="hidden">
+      <section class="card add-section">
         <h3>Add Transaction</h3>
-        <select id="type">
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-
-        <input id="amount" type="number" placeholder="Enter Amount (₹)">
-        <input id="description" type="text" placeholder="Description (eg. Food, Rent)">
-        <select id="paymentMethod">
-          <option value="Cash">Cash</option>
-          <option value="GPay">GPay</option>
-          <option value="PhonePe">PhonePe</option>
-          <option value="Paytm">Paytm</option>
-          <option value="Card">Card</option>
-          <option value="Bank">Bank Transfer</option>
-        </select>
 
         <div class="row">
-          <button id="addBtn" class="primary">💰 Add Entry</button>
-          <button id="clearBtn" class="muted">Clear All</button>
+          <select id="type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+          <input id="amount" type="number" placeholder="Enter amount (₹)" />
         </div>
 
-        <div class="info small">Entries this month: <span id="entryCount">0</span> / 100 (free)</div>
-      </div>
+        <input id="description" type="text" placeholder="Description (e.g. Food, Transport)" />
 
-      <div class="summary">
+        <div class="row">
+          <select id="paymentMethod">
+            <option value="Cash">Cash</option>
+            <option value="GPay">GPay</option>
+            <option value="PhonePe">PhonePe</option>
+            <option value="Paytm">Paytm</option>
+            <option value="Card">Card</option>
+            <option value="Bank">Bank Transfer</option>
+          </select>
+
+          <button id="addBtn" class="primary">💰 Add Entry</button>
+        </div>
+
+        <div class="row small info">
+          Entries this month: <span id="entryCount">0</span> / 100 (free)
+        </div>
+      </section>
+
+      <section class="card summary">
         <div>Today's Total: <b id="todayTotal">₹0.00</b></div>
         <div>Month Total: <b id="monthTotal">₹0.00</b></div>
         <div>Income / Expense: <b id="incExp">₹0 / ₹0</b></div>
         <div>Grand Balance: <b id="balance">₹0.00</b></div>
-      </div>
+      </section>
 
       <div class="toolbar">
-        <button id="exportExcel">Export Excel</button>
-        <button id="exportPDF">Export PDF</button>
-        <button id="backupBtn">Download Backup</button>
-        <input id="restoreInput" type="file" accept=".json" style="display:none">
-        <button id="restoreBtn">Restore Backup (JSON)</button>
-        <button id="upgradeOpen">Upgrade / Premium</button>
+        <button id="exportCsv">Export CSV</button>
+        <button id="exportPdf">Export PDF</button>
+        <button id="downloadBackup">Download Backup</button>
+        <button id="restoreBackupBtn">Restore Backup</button>
+        <input id="restoreInput" type="file" accept=".json" style="display:none" />
+        <button id="openUpgrade">Upgrade / Premium</button>
       </div>
 
-      <div class="entries" id="list"></div>
-
-      <div class="premium-modal hidden" id="premiumModal">
-        <div class="modal-card">
-          <h3>Upgrade to Premium</h3>
-          <p>Choose plan — ₹29 (1 month) or ₹299 (3 years)</p>
-          <img id="qrImg" src="" alt="QR" />
-          <p>UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
-
-          <div class="row">
-            <input id="payPhone" placeholder="Enter your phone used for payment">
-            <select id="planSelect">
-              <option value="29">₹29 — 1 month</option>
-              <option value="299">₹299 — 3 years</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <button id="iPaidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
-            <button id="closePremium" class="muted">Close</button>
-          </div>
-          <small class="small">After admin confirms payment, premium unlocks automatically (or you can press I Paid to notify).</small>
-        </div>
-      </div>
-
+      <section class="card entries" id="entriesList">
+        <h3>Transactions</h3>
+        <div id="list"></div>
+      </section>
     </section>
 
-    <footer>
-      <small>Data stored locally • Admin notifications via WhatsApp • UPI ID used for QR</small>
-    </footer>
-  </main>
+    <footer class="muted">Data stored only on your device • Admin WhatsApp: <b>+91 9544599733</b></footer>
+  </div>
+
+  <!-- Premium Modal -->
+  <div id="premiumModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Upgrade to Premium</h3>
+      <p>Choose plan — ₹29 (1 month) or ₹299 (3 years)</p>
+      <img id="qrImg" src="" alt="QR" class="qr" />
+      <p>UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
+
+      <div class="row">
+        <input id="payerPhone" placeholder="Your phone used for payment" />
+        <select id="planSelect">
+          <option value="29">₹29 — 1 month</option>
+          <option value="299">₹299 — 3 years</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <button id="paidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
+        <button id="closeModal" class="muted">Close</button>
+      </div>
+
+      <div class="small muted">After payment, press "I Paid" — admin will verify and approve. Admin can also approve via Admin panel.</div>
+    </div>
+  </div>
+
+  <!-- Admin Modal -->
+  <div id="adminModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Admin Panel</h3>
+      <div>
+        <button id="viewPending">View Pending Payments</button>
+        <button id="approveBtn">Approve Payment</button>
+        <button id="setPassBtn">Set / Change Admin Password</button>
+        <button id="closeAdmin" class="muted">Close</button>
+      </div>
+
+      <div id="pendingList" class="pending-list"></div>
+
+      <div id="approveArea" class="hidden section">
+        <input id="approvePhone" placeholder="Phone to approve" />
+        <button id="doApprove" class="primary">Unlock Premium</button>
+      </div>
+
+      <div id="setPassArea" class="hidden section">
+        <input id="newPass" placeholder="Set new admin password" />
+        <button id="savePass" class="primary">Save Password</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
