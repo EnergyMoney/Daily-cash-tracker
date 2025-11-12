@@ -1,86 +1,54 @@
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  background: #e0f2f1;
-  color: #222;
-}
-
-.splash {
+/* Add Section - Colorful Stylish Look */
+.add-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #0d47a1, #26a69a);
-  color: white;
-  animation: fadeOut 2s ease 3s forwards;
+  gap: 15px;
+  margin-top: 25px;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 1s ease-in-out;
 }
 
-.cash-logo {
-  width: 120px;
-  animation: fly 3s ease-in-out infinite alternate;
-}
-
-@keyframes fly {
-  from { transform: translateY(0); }
-  to { transform: translateY(-15px); }
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
-}
-
-.hidden { display: none; }
-
-.auth, .entry-card, .summary, .history, .tools {
-  margin: 20px;
-  padding: 15px;
-  background: #fff;
+.add-section input {
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #6a11cb;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.auth input {
-  width: 90%;
-  padding: 10px;
-  margin-bottom: 10px;
+.add-section input:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 8px #2575fc;
+  background-color: #f7faff;
 }
 
-button {
-  background: #26a69a;
-  color: #fff;
+.add-section button {
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
   border: none;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(255, 105, 180, 0.4);
 }
 
-button:hover { background: #2bbbad; }
-
-.premium-badge {
-  background: #ccc;
-  padding: 5px 10px;
-  border-radius: 8px;
+.add-section button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #ee0979, #ff6a00);
+  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
 }
 
-.premium-badge.premium {
-  background: gold;
-  color: black;
-}
-
-.history ul {
-  list-style: none;
-  padding: 0;
-}
-
-.history li {
-  border-bottom: 1px solid #ddd;
-  padding: 5px 0;
-}
-
-footer {
-  text-align: center;
-  font-size: 12px;
-  color: #555;
-  margin-top: 20px;
+/* Fade-in animation for section */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
