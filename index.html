@@ -1,74 +1,289 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Visakh Money Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visakh Money Tracker 💰 Premium Edition</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff6a00, #ee0979);
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .cash {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      top: 10px;
+      right: 15px;
+      animation: fly 2s infinite ease-in-out;
+    }
+
+    @keyframes fly {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-15px); opacity: 0.8; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    main {
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .add-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      margin-top: 25px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .add-section input,
+    .add-section select {
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ff6a00;
+      border-radius: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .add-section input:focus,
+    .add-section select:focus {
+      border-color: #ee0979;
+      box-shadow: 0 0 8px #ee0979;
+      background-color: #fff7fb;
+    }
+
+    .add-section button {
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(45deg, #ff6a00, #ee0979);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(255, 105, 180, 0.4);
+    }
+
+    .add-section button:hover {
+      transform: scale(1.05);
+    }
+
+    .entries {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .entry {
+      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+    }
+
+    .entry:last-child {
+      border-bottom: none;
+    }
+
+    .toolbar {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar button {
+      background: linear-gradient(45deg, #43cea2, #185a9d);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toolbar button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #185a9d, #43cea2);
+    }
+
+    .premium-box {
+      background: #fff6ea;
+      border: 2px solid #ffb84d;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .premium-box img {
+      width: 180px;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #fff;
+      border-top: 2px solid #eee;
+      color: #555;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <div class="splash">
-    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331948.png" class="cash-logo" />
-    <h1>💸 Visakh Money Tracker 💸</h1>
-  </div>
+  <header>
+    💜 Visakh Money Tracker Premium 💜
+    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="cash" alt="Cash" />
+  </header>
 
-  <section id="authSection" class="auth">
-    <h2>Login / Upgrade</h2>
-    <input id="phone" type="text" placeholder="Enter Phone or Admin Password (9999)" />
-    <button id="loginBtn">Continue</button>
-  </section>
-
-  <main id="mainSection" class="hidden">
-    <header>
-      <h1>Visakh Money Tracker</h1>
-      <span id="premiumBadge" class="premium-badge">FREE</span>
-    </header>
-
-    <section class="entry-card">
-      <select id="type">
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
+  <main>
+    <div class="add-section">
+      <input type="number" id="amount" placeholder="Enter Amount (₹)">
+      <input type="text" id="description" placeholder="Description (Food, Travel...)">
+      <select id="paymentMethod">
+        <option value="" disabled selected>Select Payment Method</option>
+        <option value="Cash">Cash</option>
+        <option value="GPay">GPay</option>
+        <option value="PhonePe">PhonePe</option>
+        <option value="Paytm">Paytm</option>
+        <option value="Card">Card</option>
+        <option value="Bank">Bank Transfer</option>
       </select>
-      <input id="amount" type="number" placeholder="Amount ₹" />
-      <input id="description" type="text" placeholder="Description" />
-      <select id="category">
-        <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Bills">Bills</option>
-        <option value="Health">Health</option>
-        <option value="EMI">EMI</option>
-        <option value="Salary">Salary</option>
-        <option value="Others">Others</option>
-      </select>
-      <button id="addBtn">Add</button>
-      <button id="clearBtn">Clear All</button>
-    </section>
+      <button id="addBtn">💰 Add Entry</button>
+    </div>
 
-    <section class="summary">
-      <div>Balance: <span id="balance">₹0.00</span></div>
-      <div>Today: <span id="todayTotal">₹0.00</span></div>
-      <div>Month: <span id="monthTotal">₹0.00</span></div>
-      <div>Income / Expense: <span id="incExp">₹0 / ₹0</span></div>
-    </section>
+    <div class="toolbar">
+      <button id="exportExcel">📗 Export Excel</button>
+      <button id="exportPDF">📄 Monthly PDF</button>
+      <button id="clearAll">🧹 Clear All</button>
+    </div>
 
-    <section class="history">
-      <h3>History</h3>
-      <ul id="list"></ul>
-    </section>
+    <div class="entries" id="entriesList">
+      <h3>Transactions</h3>
+      <div id="listContainer"></div>
+    </div>
 
-    <section class="tools">
-      <button id="exportExcel">Export Excel</button>
-      <button id="exportPDF">Export PDF</button>
-      <button id="backupBtn">Backup</button>
-      <input id="restoreBtn" type="file" accept=".json" />
-    </section>
-
-    <footer>
-      <p>© Visakh Payment • Powered by GPay QR • Local Storage Version</p>
-    </footer>
+    <div class="premium-box">
+      <h3>Upgrade to Premium</h3>
+      <p>✅ Get Unlimited Entries  
+         ✅ Export PDF/Excel  
+         ✅ Auto Backup & Restore  
+         ✅ Priority Support</p>
+      <p><b>₹29 / month</b> or <b>₹299 / 3 years</b></p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=visakhsivaji95-4@okhdfcbank&pn=VisakhPayment&am=29&cu=INR" alt="QR Code">
+      <p>Scan & Pay with GPay/PhonePe</p>
+    </div>
   </main>
 
-  <script src="script.js"></script>
+  <footer>
+    <small>Data saved locally • Developed by ❤️ Visakh</small>
+  </footer>
+
+  <script>
+    const addBtn = document.getElementById("addBtn");
+    const listContainer = document.getElementById("listContainer");
+    const clearAll = document.getElementById("clearAll");
+    const exportExcel = document.getElementById("exportExcel");
+    const exportPDF = document.getElementById("exportPDF");
+
+    let entries = JSON.parse(localStorage.getItem("moneyEntries") || "[]");
+
+    function saveData() {
+      localStorage.setItem("moneyEntries", JSON.stringify(entries));
+    }
+
+    function updateList() {
+      listContainer.innerHTML = "";
+      entries.forEach((entry) => {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = `
+          <div><b>₹${entry.amount}</b> - ${entry.description}</div>
+          <div class="method">Payment: ${entry.paymentMethod}</div>
+        `;
+        listContainer.appendChild(div);
+      });
+    }
+
+    addBtn.addEventListener("click", () => {
+      const amount = document.getElementById("amount").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const paymentMethod = document.getElementById("paymentMethod").value;
+      if (!amount || !description || !paymentMethod) {
+        alert("⚠️ Please fill all fields!");
+        return;
+      }
+      entries.push({ amount, description, paymentMethod });
+      saveData();
+      updateList();
+      document.getElementById("amount").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("paymentMethod").selectedIndex = 0;
+    });
+
+    clearAll.addEventListener("click", () => {
+      if (confirm("Clear all entries?")) {
+        entries = [];
+        saveData();
+        updateList();
+      }
+    });
+
+    exportExcel.addEventListener("click", () => {
+      let csv = "Amount,Description,Payment Method\n";
+      entries.forEach(e => csv += `${e.amount},${e.description},${e.paymentMethod}\n`);
+      const blob = new Blob([csv], { type: "text/csv" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "VisakhMoneyTracker.csv";
+      a.click();
+    });
+
+    exportPDF.addEventListener("click", () => {
+      const win = window.open("", "", "width=600,height=800");
+      win.document.write("<h1>Visakh Money Tracker Report</h1>");
+      win.document.write("<table border='1' style='width:100%;border-collapse:collapse'>");
+      win.document.write("<tr><th>Amount</th><th>Description</th><th>Payment</th></tr>");
+      entries.forEach(e => win.document.write(`<tr><td>₹${e.amount}</td><td>${e.description}</td><td>${e.paymentMethod}</td></tr>`));
+      win.document.write("</table>");
+      win.print();
+    });
+
+    updateList();
+  </script>
 </body>
-</html>
+        </html>
