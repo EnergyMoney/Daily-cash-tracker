@@ -1,91 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Money Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Tracker</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Splash Screen -->
   <div id="splash">
-    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo" alt="Cash Logo" />
-    <h1>Money Tracker</h1>
+    <img src="cash.png" class="fly" alt="cash">
+    <h1>💸 Money Tracker 💸</h1>
   </div>
 
-  <!-- App -->
-  <div class="app hidden">
+  <div id="app" class="hidden">
     <header>
-      <h1>💸 Money Tracker</h1>
-      <div class="balance" id="balance">₹0.00</div>
+      <h2>Money Tracker</h2>
+      <button id="upgradeBtn">Upgrade</button>
     </header>
 
-    <div class="toolbar">
-      <button id="exportExcel">Export Excel</button>
-      <button id="exportPDF">Export PDF</button>
-      <button id="backupBtn">Backup</button>
-      <button id="restoreBtn">Restore</button>
-      <button id="premiumBtn">Upgrade Premium</button>
-    </div>
+    <main>
+      <input id="desc" placeholder="Description">
+      <input id="amt" type="number" placeholder="Amount (₹)">
+      <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <button id="addBtn">Add</button>
 
-    <section class="entry-card">
-      <div class="row">
-        <select id="type">
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-        <input id="amount" type="number" placeholder="Enter amount (₹)" />
-      </div>
-      <div class="row spaced">
-        <input id="description" type="text" placeholder="Description" />
-        <select id="category">
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Bills">Bills</option>
-          <option value="Health">Health</option>
-          <option value="EMI">EMI</option>
-          <option value="Salary">Salary</option>
-          <option value="Others">Others</option>
-        </select>
-      </div>
-      <div class="row actions">
-        <button id="addBtn">Add</button>
-        <button id="clearBtn" class="muted">Clear All</button>
-      </div>
-    </section>
+      <h3>Transactions</h3>
+      <table id="list"></table>
 
-    <section class="summary">
-      <div>Today: <span id="todayTotal">₹0</span></div>
-      <div>Month: <span id="monthTotal">₹0</span></div>
-      <div>Income/Expense: <span id="incExp">₹0 / ₹0</span></div>
-    </section>
+      <h4 id="total"></h4>
 
-    <section class="history">
-      <h3>History</h3>
-      <div id="historyList" class="list"></div>
-    </section>
-
-    <footer>
-      <small>© 2025 Money Tracker | Local data only</small>
-    </footer>
+      <button id="pdfBtn">📄 PDF</button>
+      <button id="excelBtn">📊 Excel</button>
+      <button id="restoreBtn">♻️ Restore Backup</button>
+      <button id="clearBtn">🗑️ Clear All</button>
+    </main>
   </div>
 
-  <!-- Premium Popup -->
+  <!-- PREMIUM POPUP -->
   <div id="premiumPopup" class="popup hidden">
     <div class="popup-content">
-      <h2>Upgrade to Premium</h2>
+      <h3>Upgrade to Premium</h3>
       <p>Choose your plan:</p>
-      <button class="plan" data-plan="1m">₹29 - 1 Month</button>
-      <button class="plan" data-plan="3y">₹299 - 3 Years</button>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=visakhsivaji95-4@okhdfcbank&pn=VisakhS&am=29&cu=INR" class="qr"/>
+      <button class="plan" data-plan="29">₹29 - 1 Month</button>
+      <button class="plan" data-plan="299">₹299 - 3 Years</button>
       <p>After payment, tap “I Paid”.</p>
-      <a href="https://wa.me/919544599733?text=I%20Paid%20for%20Premium%20Upgrade" target="_blank" class="whatsapp">I Paid - Notify Admin</a>
+      <a href="https://wa.me/919544599733?text=I%20have%20paid%20for%20Premium%20Upgrade%20(GPay:%20visakhsivaji95-4@okhdfcbank)" 
+         target="_blank" id="paidBtn">I Paid - Notify Admin</a>
       <button id="closePopup">Close</button>
     </div>
   </div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
