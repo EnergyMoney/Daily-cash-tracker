@@ -1,147 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Money Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Tracker 💸</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Splash -->
-  <div id="splash" class="splash">
-    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png" class="splash-logo" alt="cash">
-    <h1>Money Tracker</h1>
+
+  <div class="splash-screen" id="splash">
+    <h1>💸 Money Tracker</h1>
+    <p>Smart way to manage your income & expense</p>
   </div>
 
-  <div id="app" class="hidden container">
-    <header class="topbar">
-      <div class="title">Money Tracker</div>
-      <div class="top-actions">
-        <span id="statusBadge" class="badge">FREE TRIAL</span>
-        <button id="adminBtn" class="small">Admin</button>
-      </div>
+  <div class="app" id="app" style="display:none;">
+    <header>
+      <h2>Money Tracker</h2>
+      <button id="upgradeBtn">Upgrade</button>
     </header>
 
-    <section class="card identify" id="identifyCard">
-      <div>
-        <small class="muted">Free trial (full features) active for 30 days from first use on this device.</small>
-      </div>
-      <div class="row">
-        <button id="startBtn" class="primary">Start App</button>
-        <button id="openUpgrade" class="muted">Upgrade / Premium</button>
-      </div>
-    </section>
+    <div class="form">
+      <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <input type="number" id="amount" placeholder="Enter amount ₹">
+      <input type="text" id="description" placeholder="Description">
+      <select id="category">
+        <option>Food</option><option>Transport</option><option>Shopping</option>
+        <option>Bills</option><option>Health</option><option>Salary</option><option>Others</option>
+      </select>
+      <button id="addBtn">Add</button>
+    </div>
 
-    <section id="mainUI" class="hidden">
-      <section class="card add-section">
-        <h3>Add Transaction</h3>
+    <div class="summary">
+      <p><b>Today:</b> <span id="todayTotal">₹0.00</span></p>
+      <p><b>Month:</b> <span id="monthTotal">₹0.00</span></p>
+      <p><b>Balance:</b> <span id="balance">₹0.00</span></p>
+      <p><b>Income / Expense:</b> <span id="incExp">₹0 / ₹0</span></p>
+    </div>
 
-        <div class="row inputs">
-          <select id="type">
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
+    <canvas id="catChart"></canvas>
+    <div id="historyList"></div>
 
-          <input id="amount" type="number" placeholder="Amount (₹)" />
-        </div>
-
-        <div class="row inputs spaced">
-          <input id="description" type="text" placeholder="Description (e.g. Food, Travel)" />
-          <select id="category">
-            <option>Food</option><option>Transport</option><option>Shopping</option>
-            <option>Bills</option><option>Health</option><option>EMI</option>
-            <option>Salary</option><option>Others</option>
-          </select>
-        </div>
-
-        <div class="row actions">
-          <button id="addBtn" class="primary">💰 Add Entry</button>
-          <button id="clearBtn" class="muted">Clear All</button>
-        </div>
-
-        <div class="info small">Entries this month: <span id="entryCount">0</span> / 100 (free trial)</div>
-      </section>
-
-      <section class="card summary">
-        <div>Today's Total: <b id="todayTotal">₹0.00</b></div>
-        <div>Month Total: <b id="monthTotal">₹0.00</b></div>
-        <div>Income / Expense: <b id="incExp">₹0 / ₹0</b></div>
-        <div>Grand Balance: <b id="balance">₹0.00</b></div>
-      </section>
-
-      <div class="toolbar">
-        <button id="exportCsv">Export CSV</button>
-        <button id="exportPdf">Export PDF</button>
-        <button id="downloadBackup">Download Backup</button>
-        <button id="restoreBtn">Restore Backup</button>
-        <input id="restoreInput" type="file" accept=".json" style="display:none">
-        <button id="openUpgrade2" class="primary">Upgrade / Premium</button>
-      </div>
-
-      <section class="card entries" id="entriesList">
-        <h3>Transactions</h3>
-        <div id="list"></div>
-      </section>
-    </section>
-
-    <footer class="muted">Local data only • Admin WhatsApp: <b>+91 9544599733</b></footer>
+    <div class="btn-group">
+      <button id="exportPDF">📄 PDF</button>
+      <button id="exportExcel">📊 Excel</button>
+      <button id="restoreBtn">♻️ Restore</button>
+      <button id="clearBtn">🗑 Clear All</button>
+    </div>
   </div>
 
-  <!-- Upgrade Modal -->
-  <div id="upgradeModal" class="modal hidden" aria-hidden="true">
-    <div class="modal-card">
+  <!-- Upgrade Popup -->
+  <div id="upgradePopup" class="popup" style="display:none;">
+    <div class="popup-content">
       <h3>Upgrade to Premium</h3>
-      <p>Choose plan — ₹29 (30 days) or ₹299 (1095 days / 3 years)</p>
-      <img id="qrImg" class="qr" alt="UPI QR" />
-      <p>UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
-
-      <div class="row">
-        <input id="payerPhone" placeholder="Your phone used for payment (optional)" />
-        <select id="planSelect">
-          <option value="29">₹29 — 30 days</option>
-          <option value="299">₹299 — 1095 days</option>
-        </select>
-      </div>
-
-      <div class="row">
-        <button id="iPaidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
-        <button id="closeUpgrade" class="muted close-btn">Close</button>
-      </div>
-
-      <small class="muted">After payment press "I Paid" — admin will verify and approve. Admin can also approve via Admin panel.</small>
+      <p>Choose plan - ₹29 (30 days) or ₹299 (3 years)</p>
+      <button id="plan30">₹29 - 30 Days</button>
+      <button id="plan1095">₹299 - 3 Years</button>
+      <p>After payment, tap "I Paid"</p>
+      <a id="whatsappBtn" href="https://wa.me/919544599733?text=I%20Paid%20for%20Premium%20MoneyTracker" target="_blank">📩 I Paid - Notify Admin</a>
+      <button id="closePopup">Close</button>
     </div>
   </div>
 
-  <!-- Admin Modal -->
-  <div id="adminModal" class="modal hidden" aria-hidden="true">
-    <div class="modal-card">
-      <h3>Admin Panel</h3>
-
-      <div id="adminLoginArea">
-        <input type="password" id="adminPassInput" placeholder="Enter admin password (or set first time)">
-        <div class="row">
-          <button id="adminLoginBtn" class="primary">Login / Set</button>
-          <button id="closeAdmin" class="muted close-btn">Close</button>
-        </div>
-      </div>
-
-      <div id="adminArea" class="hidden">
-        <div class="row">
-          <button id="viewPending" class="primary">View Pending Payments</button>
-          <button id="approveBtn" class="primary">Approve Selected</button>
-          <button id="changePassBtn" class="muted">Change Password</button>
-        </div>
-
-        <div id="pendingList" class="card pending-list"></div>
-
-        <div class="row">
-          <button id="adminRestore" class="muted">Restore Backup (admin)</button>
-          <button id="adminLogout" class="muted">Logout</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
