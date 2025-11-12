@@ -1,71 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visakh Money Tracker 💸</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Visakh Money Tracker</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="cash.png" />
 </head>
 <body>
-  <!-- Splash Animation -->
-  <div id="splash">
-    <img src="cash.png" class="fly" alt="Flying Cash" />
-    <h1>Visakh Money Tracker</h1>
+  <div class="splash">
+    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331948.png" class="cash-logo" />
+    <h1>💸 Visakh Money Tracker 💸</h1>
   </div>
 
-  <!-- Main App -->
-  <div id="app" class="hidden">
+  <section id="authSection" class="auth">
+    <h2>Login / Upgrade</h2>
+    <input id="phone" type="text" placeholder="Enter Phone or Admin Password (9999)" />
+    <button id="loginBtn">Continue</button>
+  </section>
+
+  <main id="mainSection" class="hidden">
     <header>
-      <img src="cash.png" alt="Logo" class="logo" />
-      <h2>Visakh Money Tracker 💰</h2>
-      <p class="premium-badge" id="premiumBadge">FREE USER</p>
+      <h1>Visakh Money Tracker</h1>
+      <span id="premiumBadge" class="premium-badge">FREE</span>
     </header>
 
-    <section id="authSection">
-      <h3>🔐 Admin / Premium Login</h3>
-      <input type="password" id="adminPass" placeholder="Enter Admin Password" />
-      <button id="adminLoginBtn">Login</button>
-    </section>
-
-    <section id="mainSection" class="hidden">
-      <h3>Add Entry</h3>
+    <section class="entry-card">
       <select id="type">
-        <option value="income">Income</option>
         <option value="expense">Expense</option>
+        <option value="income">Income</option>
       </select>
-      <input type="text" id="desc" placeholder="Description" />
-      <input type="number" id="amount" placeholder="Amount ₹" />
+      <input id="amount" type="number" placeholder="Amount ₹" />
+      <input id="description" type="text" placeholder="Description" />
+      <select id="category">
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Health">Health</option>
+        <option value="EMI">EMI</option>
+        <option value="Salary">Salary</option>
+        <option value="Others">Others</option>
+      </select>
       <button id="addBtn">Add</button>
-
-      <div class="upgrade-section">
-        <img src="qr.png" class="qr" alt="QR Code" />
-        <p>Upgrade to Premium</p>
-        <button id="upgradeBtn">Unlock ₹29 / ₹299</button>
-      </div>
-
-      <h3>Transactions</h3>
-      <ul id="list"></ul>
-
-      <div class="summary">
-        <p>Total Income: ₹<span id="totalIncome">0</span></p>
-        <p>Total Expense: ₹<span id="totalExpense">0</span></p>
-        <p>Balance: ₹<span id="balance">0</span></p>
-      </div>
-
-      <div class="actions">
-        <button id="pdfBtn">Download PDF</button>
-        <button id="excelBtn">Download Excel</button>
-        <button id="clearBtn">Clear All</button>
-        <button id="backupBtn">Backup Data</button>
-        <button id="restoreBtn">Restore Backup</button>
-      </div>
-
-      <footer>
-        <small>© Visakh Money Tracker | Local only — data saved on this device</small>
-      </footer>
+      <button id="clearBtn">Clear All</button>
     </section>
-  </div>
+
+    <section class="summary">
+      <div>Balance: <span id="balance">₹0.00</span></div>
+      <div>Today: <span id="todayTotal">₹0.00</span></div>
+      <div>Month: <span id="monthTotal">₹0.00</span></div>
+      <div>Income / Expense: <span id="incExp">₹0 / ₹0</span></div>
+    </section>
+
+    <section class="history">
+      <h3>History</h3>
+      <ul id="list"></ul>
+    </section>
+
+    <section class="tools">
+      <button id="exportExcel">Export Excel</button>
+      <button id="exportPDF">Export PDF</button>
+      <button id="backupBtn">Backup</button>
+      <input id="restoreBtn" type="file" accept=".json" />
+    </section>
+
+    <footer>
+      <p>© Visakh Payment • Powered by GPay QR • Local Storage Version</p>
+    </footer>
+  </main>
 
   <script src="script.js"></script>
 </body>
