@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌈 Mind Glow – Positive Energy Companion</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: #222;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 { color: #fff; margin-top: 20px; }
+  .card {
+    background: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 400px;
+  }
+  button {
+    background: #6c63ff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover { background: #5848e5; }
+  input, textarea {
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+    background: #f0f0f0;
+  }
+  .affirmation { font-size: 1.2em; color: #444; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>💜 Mind Glow 💫</h1>
+<p>Your daily source of peace, power & positivity.</p>
+
+<div class="card">
+  <h2>✨ Daily Affirmation</h2>
+  <p id="affirmation" class="affirmation">Loading your positive energy...</p>
+  <button onclick="playAffirmation()">🔊 Hear It</button>
+</div>
+
+<div class="card">
+  <h2>🧘 Meditation</h2>
+  <button onclick="playMeditation()">🎵 Play 3-Min Relaxation</button>
+  <audio id="meditationAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3"></audio>
+</div>
+
+<div class="card">
+  <h2>📓 Mood Journal</h2>
+  <textarea id="moodInput" placeholder="How do you feel today?"></textarea><br>
+  <button onclick="saveMood()">💾 Save Mood</button>
+  <p id="moodMsg"></p>
+</div>
+
+<div class="card">
+  <h2>🌼 Gratitude Tracker</h2>
+  <input id="gratitude" placeholder="Something you're thankful for..."><br>
+  <button onclick="saveGratitude()">🌸 Add Gratitude</button>
+  <ul id="gratitudeList"></ul>
+</div>
+
+<div class="card">
+  <h2>📊 Weekly Mood Progress</h2>
+  <canvas id="moodChart" width="350" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const affirmations = [
+  "I am calm, confident, and in control.",
+  "Positive energy flows through me.",
+  "I attract happiness and success.",
+  "My thoughts create my beautiful life.",
+  "Every day, I grow stronger and happier."
+];
+
+function newAffirmation(){
+  const random = affirmations[Math.floor(Math.random() * affirmations.length)];
+  document.getElementById("affirmation").innerText = random;
+}
+newAffirmation();
+
+function playAffirmation(){
+  const text = document.getElementById("affirmation").innerText;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.pitch = 1;
+  utter.rate = 1;
+  speechSynthesis.speak(utter);
+}
+
+function playMeditation(){
+  document.getElementById("meditationAudio").play();
+}
+
+function saveMood(){
+  const mood = document.getElementById("moodInput").value;
+  if(mood.trim() === '') return alert("Please write your mood ❤️");
+  localStorage.setItem('mood_'+Date.now(), mood);
+  document.getElementById("moodMsg").innerText = "💖 Mood saved! You’re doing great.";
+  document.getElementById("moodInput").value = '';
+}
+
+function saveGratitude(){
+  const g = document.getElementById("gratitude").value;
+  if(g.trim() === '') return;
+  let list = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+  list.push(g);
+  localStorage.setItem('gratitudes', JSON.stringify(list));
+  renderGratitudes();
+  document.getElementById("gratitude").value = '';
+}
+
+function renderGratitudes(){
+  let list = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+  const ul = document.getElementById("gratitudeList");
+  ul.innerHTML = '';
+  list.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = "💫 " + item;
+    ul.appendChild(li);
+  });
+}
+renderGratitudes();
+
+const ctx = document.getElementById('moodChart');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets: [{
+      label: 'Mood Level',
+      data: [3,4,5,4,5,4,5],
+      borderWidth: 1
+    }]
+  }
+});
+</script>
+
+</body>
+</html>
