@@ -1,0 +1,21 @@
+{
+  "name": "My Life Tools",
+  "short_name": "LifeTools",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#fff0f6",
+  "theme_color": "#ff70c0",
+  "description": "All-in-one tools: Money Tracker, Management, and Mind Glow positivity.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4275/4275497.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4275/4275497.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
