@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Money Management App</title>
+  <title>💸 Smart Money Manager</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -14,18 +15,19 @@
       padding: 0;
     }
     h1 {
-      margin-top: 30px;
-      font-size: 26px;
+      margin-top: 25px;
+      font-size: 28px;
+      text-shadow: 0 0 8px rgba(0,0,0,0.4);
     }
     .container {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      padding: 20px;
-      margin: 20px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      margin: 25px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
     input {
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
       border-radius: 10px;
       border: none;
@@ -41,6 +43,11 @@
       border-radius: 10px;
       cursor: pointer;
       margin-top: 15px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #fff;
+      color: #333;
     }
     .result {
       margin-top: 25px;
@@ -57,40 +64,93 @@
     .essentials { background: #4fa3ff; }
     .savings { background: #47ff85; }
     .fun { background: #d78bff; }
+    canvas {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>💰 Your Wealth, Your Rules!</h1>
-  <p>Enter any amount to see your smart money plan 💜</p>
+  <h1>💸 Smart Money Manager</h1>
+  <p>Plan your money like a pro 💜</p>
 
   <div class="container">
     <input type="number" id="income" placeholder="Enter your income (₹)" />
     <br>
     <button onclick="calculate()">Calculate</button>
+    <button onclick="downloadExcel()">⬇️ Download Excel</button>
 
     <div class="result" id="result"></div>
+    <canvas id="moneyChart" width="350" height="300"></canvas>
   </div>
 
   <script>
+    let chart;
+
     function calculate() {
-      let income = parseFloat(document.getElementById("income").value);
+      const income = parseFloat(document.getElementById("income").value);
       if (!income || income <= 0) {
         alert("Please enter a valid amount 🙏");
         return;
       }
 
-      let emergency = income * 0.2;
-      let essentials = income * 0.5;
-      let savings = income * 0.2;
-      let fun = income * 0.1;
+      const emergency = income * 0.2;
+      const essentials = income * 0.5;
+      const savings = income * 0.2;
+      const fun = income * 0.1;
 
       document.getElementById("result").innerHTML = `
         <div class="box emergency">🚨 Emergency Fund: ₹${emergency.toFixed(2)}</div>
-        <div class="box essentials">🏠 Essentials (Rent, Bills, Food): ₹${essentials.toFixed(2)}</div>
+        <div class="box essentials">🏠 Essentials: ₹${essentials.toFixed(2)}</div>
         <div class="box savings">💹 Savings & Investments: ₹${savings.toFixed(2)}</div>
-        <div class="box fun">🎉 Fun & Treat Yourself: ₹${fun.toFixed(2)}</div>
+        <div class="box fun">🎉 Fun & Treat: ₹${fun.toFixed(2)}</div>
         <p style="margin-top:15px;font-size:16px;">Keep growing 🌱, every rupee counts!</p>
       `;
+
+      const ctx = document.getElementById("moneyChart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Emergency", "Essentials", "Savings", "Fun"],
+          datasets: [{
+            data: [emergency, essentials, savings, fun],
+            backgroundColor: ["#ff5c5c", "#4fa3ff", "#47ff85", "#d78bff"],
+            borderColor: "white",
+            borderWidth: 2,
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { labels: { color: "white" } }
+          }
+        }
+      });
+    }
+
+    function downloadExcel() {
+      const income = parseFloat(document.getElementById("income").value);
+      if (!income || income <= 0) {
+        alert("Please enter amount before downloading 🙏");
+        return;
+      }
+
+      const rows = [
+        ["Category", "Amount (₹)"],
+        ["Emergency Fund", (income * 0.2).toFixed(2)],
+        ["Essentials", (income * 0.5).toFixed(2)],
+        ["Savings & Investments", (income * 0.2).toFixed(2)],
+        ["Fun & Treat", (income * 0.1).toFixed(2)]
+      ];
+
+      const csvContent = rows.map(e => e.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Money_Management_Report.csv";
+      link.click();
     }
   </script>
 </body>
