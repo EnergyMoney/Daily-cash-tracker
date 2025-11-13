@@ -4,97 +4,163 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>My Money Tracker</title>
+
+  <!-- Simple colorful light theme -->
   <style>
-    :root{--bg1:#f7fbff;--accent1:#7bd389;--accent2:#ff9aa2;--card:#fff;--muted:#657786}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{font-family:Inter,system-ui,Arial;margin:0;background:linear-gradient(135deg,#f0fbff,#fff8f2);color:#14213d}
-    .container{max-width:980px;margin:18px auto;padding:16px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg,#ffd6a5,#ffadad);box-shadow:0 8px 30px rgba(0,0,0,.06);color:#0b132b}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.08);cursor:pointer}
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .badge{padding:6px 10px;border-radius:12px;background:#fff;font-weight:700;color:#333;box-shadow:0 4px 10px rgba(0,0,0,.04)}
-    button{cursor:pointer;border:0;border-radius:10px;padding:8px 12px;font-weight:600}
-    .primary{background:linear-gradient(90deg,#ff7a7a,#ffb199);color:#fff}
-    .muted{background:#f1f5f9;color:#111;box-shadow:0 2px 8px rgba(0,0,0,.03)}
-    .card{background:var(--card);border-radius:12px;padding:14px;margin-top:12px;box-shadow:0 8px 22px rgba(9,30,63,.04)}
-    .row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
-    input,select{padding:10px;border-radius:10px;border:1px solid #eef2f6;outline:none;font-size:15px}
-    .add-grid{display:grid;grid-template-columns:1fr 140px;gap:10px;align-items:center}
-    .summary{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-    .tile{flex:1 1 180px;background:linear-gradient(180deg,#fff,#fff);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,.04)}
-    .toolbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-    .entries{margin-top:14px}
-    .entry-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:#fff;margin-bottom:8px;box-shadow:0 4px 12px rgba(2,6,23,.03)}
-    .entry-meta{color:#666;font-size:12px;margin-top:6px}
-    .entry-right{font-weight:800;display:flex;gap:8px;align-items:center}
-    .entry-btn{background:#f1f5f9;padding:6px 8px;border-radius:8px;font-weight:700;color:#0b132b;cursor:pointer}
-    footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
-    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.42);z-index:9999}
-    .modal{background:#fff;width:94%;max-width:520px;border-radius:12px;padding:16px;box-shadow:0 20px 60px rgba(9,30,63,.2)}
-    .qr{width:220px;height:220px;object-fit:cover;border-radius:10px;display:block;margin:10px auto}
-    @media(max-width:720px){.add-grid{grid-template-columns:1fr}.summary{flex-direction:column}.topbar{flex-direction:column;align-items:flex-start;gap:10px}}
+    :root{
+      --bg1:#f7fbff; --accent1:#7bd389; --accent2:#ff9aa2; --card:#ffffff;
+      --muted:#657786; --glass: rgba(255,255,255,0.8);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin:0; padding:0; background: linear-gradient(135deg,#f0fbff,#fff8f2);
+      color:#14213d; -webkit-font-smoothing:antialiased;
+    }
+    .container { max-width:980px; margin:18px auto; padding:16px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px; border-radius:12px;
+      background: linear-gradient(90deg,#ffd6a5,#ffadad);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06); color:#0b132b;
+    }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:800; font-size:18px; }
+    .logo {
+      width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+    .top-actions { display:flex; gap:8px; align-items:center; }
+    .badge { padding:6px 10px; border-radius:12px; background:#fff; font-weight:700; color:#333; box-shadow:0 4px 10px rgba(0,0,0,0.04); }
+    button { cursor:pointer; border:0; border-radius:10px; padding:8px 12px; font-weight:600; }
+    .primary { background: linear-gradient(90deg,#ff7a7a,#ffb199); color:#fff; }
+    .muted { background:#f1f5f9; color:#111; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+    .small { padding:6px 10px; border-radius:8px; font-size:13px; }
+
+    .card { background:var(--card); border-radius:12px; padding:14px; margin-top:12px; box-shadow:0 8px 22px rgba(9,30,63,0.04); }
+    .row { display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+    input, select, textarea { padding:10px 12px; border-radius:10px; border:1px solid #eef2f6; outline:none; font-size:15px; }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .add-grid { display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:center; }
+    .spaced { display:flex; gap:10px; }
+    .info { color:var(--muted); font-size:13px; margin-top:8px; }
+
+    .summary { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+    .summary .tile { flex:1 1 180px; background:linear-gradient(180deg,#fff,#fff); border-radius:10px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+    .tile .label { color:var(--muted); font-size:13px; }
+    .tile .value { font-weight:800; margin-top:6px; font-size:18px; }
+
+    .toolbar { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+    .entries { margin-top:14px; }
+    .entry-row { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; background:#fff; margin-bottom:8px; box-shadow:0 4px 12px rgba(2,6,23,0.03); }
+    .entry-left { font-size:14px; color:#111; }
+    .entry-meta { color:var(--muted); font-size:12px; margin-top:6px; }
+    .entry-right { font-weight:800; display:flex; gap:8px; align-items:center; }
+    .entry-btn { background:#f1f5f9; padding:6px 8px; border-radius:8px; font-weight:700; color:#0b132b; }
+
+    footer { text-align:center; color:var(--muted); font-size:13px; margin-top:18px; }
+
+    /* modal */
+    .modal-backdrop { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.42); z-index:9999; }
+    .modal { background:#fff; width:94%; max-width:520px; border-radius:12px; padding:16px; box-shadow:0 20px 60px rgba(9,30,63,0.2); }
+    .modal h3 { margin:0 0 8px 0; }
+    .qr { width:220px; height:220px; object-fit:cover; border-radius:10px; display:block; margin:10px auto; }
+
+    /* responsive */
+    @media (max-width:720px){
+      .add-grid { grid-template-columns:1fr; }
+      .summary { flex-direction:column; }
+      .topbar { flex-direction:column; align-items:flex-start; gap:10px; }
+    }
+
+    /* little helpers */
+    .muted-small { font-size:13px; color:#666; }
+    .pending-row { display:flex; justify-content:space-between; align-items:center; padding:8px; border-radius:8px; background:#fff; margin-bottom:8px; }
+    .trash-note { font-size:13px; color:#777; margin-top:8px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="topbar">
       <div class="brand">
-        <div id="logoTap" class="logo">MM</div>
+        <div class="logo">MM</div>
         <div>
           My Money Tracker
-          <div style="font-size:12px;color:#123">Daily cash tracker • Backup • Export • Premium</div>
+          <div style="font-size:12px;color:#123;">Manage daily cash, backup, export & premium</div>
         </div>
       </div>
       <div class="top-actions">
         <div id="statusBadge" class="badge">TRIAL</div>
-        <!-- Admin button hidden by default (use logo taps to reveal login) -->
-        <div id="adminHint" style="display:none">
-          <button id="openAdmin" class="small muted">Admin</button>
-        </div>
+        <button id="openAdmin" class="small muted">Admin</button>
         <button id="openUpgrade" class="small primary">Upgrade</button>
       </div>
     </div>
 
+    <!-- Identify / Start (trial) -->
     <div id="startCard" class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <strong>Free trial:</strong> Full features for 30 days from first start on this device.
-          <div style="color:#666;font-size:13px">After trial ends, export/restore/advanced features locked until upgrade.</div>
+          <div class="info">After trial ends, export/restore/advanced features locked until upgrade.</div>
         </div>
-        <div><button id="startApp" class="primary">Start App</button></div>
+        <div>
+          <button id="startApp" class="primary">Start App</button>
+        </div>
       </div>
     </div>
 
+    <!-- Main UI -->
     <div id="mainUI" class="hidden">
       <div class="card">
         <h3>Add Transaction</h3>
         <div class="add-grid">
-          <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex; flex-direction:column; gap:8px;">
             <div class="row">
-              <select id="type"><option value="expense">Expense</option><option value="income">Income</option></select>
+              <select id="type">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
               <input id="amount" type="number" placeholder="Amount (₹)" />
             </div>
-            <div class="row" style="gap:10px;">
-              <input id="description" type="text" placeholder="Description e.g. Groceries" style="flex:1" />
-              <select id="category"><option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Health</option><option>EMI</option><option>Salary</option><option>Others</option></select>
+            <div class="row spaced">
+              <input id="description" type="text" placeholder="Description e.g. Groceries" />
+              <select id="category">
+                <option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option>
+                <option>Health</option><option>EMI</option><option>Salary</option><option>Others</option>
+              </select>
             </div>
           </div>
 
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div class="row"><button id="addBtn" class="primary" style="width:100%;">💰 Add Entry</button></div>
-            <div class="row"><button id="recoverTrash" class="muted" style="width:100%;">♻️ Recover Deleted</button></div>
-            <div style="color:#666;font-size:13px">Entries this month: <span id="entryCount">0</span> / 100 (trial)</div>
-            <div style="font-size:13px;color:#777">Deleted entries stored in Trash until you restore.</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="row">
+              <button id="addBtn" class="primary" style="width:100%;">💰 Add Entry</button>
+            </div>
+            <div class="row">
+              <button id="recoverTrash" class="muted" style="width:100%;">♻️ Recover Deleted</button>
+            </div>
+            <div class="info muted-small">Entries this month: <span id="entryCount">0</span> / 100 (trial)</div>
+            <div class="trash-note">Deleted entries saved to Trash until you permanently clear backup.</div>
           </div>
         </div>
       </div>
 
       <div class="summary">
-        <div class="tile"><div class="label">Today's Total</div><div id="todayTotal" class="value">₹0.00</div></div>
-        <div class="tile"><div class="label">This Month</div><div id="monthTotal" class="value">₹0.00</div></div>
-        <div class="tile"><div class="label">Income / Expense</div><div id="incExp" class="value">₹0 / ₹0</div></div>
-        <div class="tile"><div class="label">Grand Balance</div><div id="balance" class="value">₹0.00</div></div>
+        <div class="tile">
+          <div class="label">Today's Total</div>
+          <div id="todayTotal" class="value">₹0.00</div>
+        </div>
+        <div class="tile">
+          <div class="label">This Month</div>
+          <div id="monthTotal" class="value">₹0.00</div>
+        </div>
+        <div class="tile">
+          <div class="label">Income / Expense</div>
+          <div id="incExp" class="value">₹0 / ₹0</div>
+        </div>
+        <div class="tile">
+          <div class="label">Grand Balance</div>
+          <div id="balance" class="value">₹0.00</div>
+        </div>
       </div>
 
       <div class="card toolbar">
@@ -112,54 +178,85 @@
       </div>
     </div>
 
-    <footer><small>Local data only • Admin WhatsApp: <b>+91 9544599733</b></small></footer>
+    <footer>
+      <small>Local data only • Admin WhatsApp: <b>+91 9544599733</b></small>
+    </footer>
   </div>
 
-  <!-- Upgrade Modal -->
-  <div id="upgradeModal" class="modal-backdrop"><div class="modal">
-    <h3>Upgrade to Premium</h3>
-    <p>Choose plan — ₹29 (30 days) or ₹299 (1095 days / 3 years)</p>
-    <img id="qrImg" class="qr" alt="UPI QR" />
-    <p style="text-align:center">UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
-    <div class="row" style="justify-content:center;margin-top:8px;">
-      <input id="payerPhone" placeholder="Phone used for payment (optional)" style="padding:8px;border-radius:8px" />
-      <select id="planSelect" style="padding:8px;border-radius:8px"><option value="29">₹29 — 30 days</option><option value="299">₹299 — 1095 days</option></select>
+  <!-- UPGRADE MODAL -->
+  <div id="upgradeModal" class="modal-backdrop">
+    <div class="modal">
+      <h3>Upgrade to Premium</h3>
+      <p>Choose plan — ₹29 (30 days) or ₹299 (1095 days / 3 years)</p>
+      <img id="qrImg" class="qr" alt="UPI QR" />
+      <p style="text-align:center">UPI ID: <b>visakhsivaji95-4@okhdfcbank</b></p>
+      <div class="row" style="justify-content:center; margin-top:8px;">
+        <input id="payerPhone" placeholder="Phone used for payment (optional)" style="padding:8px; border-radius:8px;" />
+        <select id="planSelect" style="padding:8px; border-radius:8px;">
+          <option value="29">₹29 — 30 days</option>
+          <option value="299">₹299 — 1095 days</option>
+        </select>
+      </div>
+      <div class="row" style="justify-content:center; margin-top:12px;">
+        <button id="iPaidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
+        <button id="closeUpgrade" class="muted">Close</button>
+      </div>
+      <p style="text-align:center; margin-top:8px; color:#666;">After payment press "I Paid" — admin will verify and approve.</p>
     </div>
-    <div class="row" style="justify-content:center;margin-top:12px;">
-      <button id="iPaidBtn" class="primary">I Paid — Notify Admin (WhatsApp)</button>
-      <button id="closeUpgrade" class="muted">Close</button>
-    </div>
-    <p style="text-align:center;color:#666;margin-top:8px">After payment press "I Paid" — admin will verify and approve.</p>
-  </div></div>
+  </div>
 
-  <!-- Admin Modal (hidden; opened after logo taps) -->
-  <div id="adminModal" class="modal-backdrop"><div class="modal">
-    <h3>Admin Panel</h3>
-    <div id="adminLoginArea">
-      <input id="adminPass" type="password" placeholder="Enter admin password (set first time)" style="width:100%;margin-top:8px" />
-      <div class="row" style="justify-content:center;margin-top:8px;">
-        <button id="adminLoginBtn" class="primary">Login / Set</button>
-        <button id="closeAdmin" class="muted">Close</button>
+  <!-- ADMIN MODAL -->
+  <div id="adminModal" class="modal-backdrop">
+    <div class="modal">
+      <h3>Admin Panel</h3>
+
+      <div id="adminLoginArea">
+        <input id="adminPass" type="password" placeholder="Enter admin password (set first time)" style="width:100%; margin-top:8px;" />
+        <div class="row" style="justify-content:center; margin-top:8px;">
+          <button id="adminLoginBtn" class="primary">Login / Set</button>
+          <button id="closeAdmin" class="muted">Close</button>
+        </div>
+      </div>
+
+      <div id="adminArea" style="display:none; margin-top:12px;">
+        <div style="display:flex; gap:8px; justify-content:space-between; align-items:center;">
+          <strong>Pending Payments</strong>
+          <div>
+            <button id="refreshPending" class="small muted">Refresh</button>
+            <button id="logoutAdmin" class="small muted">Logout</button>
+          </div>
+        </div>
+
+        <div id="pendingList" style="margin-top:10px; max-height:260px; overflow:auto;"></div>
+
+        <div style="margin-top:10px;">
+          <button id="approveSelected" class="primary">Approve Selected</button>
+          <button id="changePass" class="muted">Change Password</button>
+        </div>
+
+        <div style="margin-top:12px; font-size:13px; color:#666;">
+          <strong>Note:</strong> Approve a pending claim to set premium expiry for that phone.
+        </div>
       </div>
     </div>
+  </div>
 
-    <div id="adminArea" style="display:none;margin-top:12px">
-      <div style="display:flex;gap:8px;justify-content:space-between;align-items:center">
-        <strong>Pending Payments</strong>
-        <div><button id="refreshPending" class="small muted">Refresh</button><button id="logoutAdmin" class="small muted">Logout</button></div>
-      </div>
-      <div id="pendingList" style="margin-top:10px;max-height:260px;overflow:auto"></div>
-      <div style="margin-top:10px">
-        <button id="approveSelected" class="primary">Approve Selected</button>
-        <button id="changePass" class="muted">Change Password</button>
-      </div>
-      <div style="margin-top:12px;font-size:13px;color:#666"><strong>Note:</strong> Approve a pending claim to set premium expiry for that phone.</div>
-    </div>
-  </div></div>
+  <!-- Minimal icons via inline SVG templates if needed (omitted) -->
 
+  <!-- Script: app logic -->
   <script>
+  /* My Money Tracker - single-file app
+     localStorage keys used:
+       MM_ENTRIES - array of entry objects
+       MM_TRASH   - array of deleted entries (recover)
+       MM_PENDING - pending payment claims
+       MM_USERS   - map phone -> { premiumExpiry: timestamp }
+       MM_TRIAL   - { start: iso }
+       MM_ADMIN   - base64(password)
+  */
+
   (function(){
-    // Config & keys
+    // Config
     const ADMIN_WH = "919544599733";
     const UPI_ID = "visakhsivaji95-4@okhdfcbank";
     const TRIAL_DAYS = 30;
@@ -170,201 +267,412 @@
     const KEY_TRIAL = "MM_TRIAL";
     const KEY_ADMIN = "MM_ADMIN";
 
-    // DOM
+    // Elements
     const $ = id => document.getElementById(id);
-    const logoTap = $('logoTap'), openAdminHint = $('adminHint'), openAdminBtn = $('openAdmin');
-    const startApp = $('startApp'), startCard = $('startCard'), mainUI = $('mainUI');
-    const addBtn = $('addBtn'), amountInput = $('amount'), descInput = $('description'), typeInput = $('type'), catInput = $('category');
-    const listDiv = $('list'), entryCountEl = $('entryCount');
-    const exportCsv = $('exportCsv'), exportPdf = $('exportPdf'), downloadBackup = $('downloadBackup'), restoreBackupBtn = $('restoreBackupBtn'), restoreInput = $('restoreInput');
+    const startCard = $('startCard'), startApp = $('startApp'), mainUI = $('mainUI');
+    const openAdmin = $('openAdmin'), adminModal = $('adminModal'), adminLoginBtn = $('adminLoginBtn'), adminPass = $('adminPass');
+    const adminArea = $('adminArea'), pendingList = $('pendingList'), refreshPending = $('refreshPending');
+    const approveSelected = $('approveSelected'), changePass = $('changePass'), logoutAdmin = $('logoutAdmin'), closeAdmin = $('closeAdmin');
     const openUpgrade = $('openUpgrade'), openUpgrade2 = $('openUpgrade2'), upgradeModal = $('upgradeModal'), closeUpgrade = $('closeUpgrade');
     const qrImg = $('qrImg'), payerPhone = $('payerPhone'), planSelect = $('planSelect'), iPaidBtn = $('iPaidBtn');
-    const adminModal = $('adminModal'), adminLoginBtn = $('adminLoginBtn'), adminPass = $('adminPass'), adminArea = $('adminArea'), pendingList = $('pendingList');
-    const refreshPending = $('refreshPending'), approveSelected = $('approveSelected'), changePass = $('changePass'), logoutAdmin = $('logoutAdmin'), closeAdmin = $('closeAdmin');
     const statusBadge = $('statusBadge');
+    const addBtn = $('addBtn'), amountInput = $('amount'), descInput = $('description'), typeInput = $('type'), catInput = $('category');
+    const listDiv = $('list'), entryCountEl = $('entryCount'), recoverTrash = $('recoverTrash');
+    const exportCsv = $('exportCsv'), exportPdf = $('exportPdf'), downloadBackup = $('downloadBackup'), restoreBackupBtn = $('restoreBackupBtn'), restoreInput = $('restoreInput');
+    const startBadge = $('statusBadge');
 
-    // storage helpers
-    const loadEntries = ()=> JSON.parse(localStorage.getItem(KEY_ENT) || "[]");
-    const saveEntries = (a)=> localStorage.setItem(KEY_ENT, JSON.stringify(a));
-    const loadTrash = ()=> JSON.parse(localStorage.getItem(KEY_TRASH) || "[]");
-    const saveTrash = (a)=> localStorage.setItem(KEY_TRASH, JSON.stringify(a));
-    const loadPending = ()=> JSON.parse(localStorage.getItem(KEY_PENDING) || "[]");
-    const savePending = (a)=> localStorage.setItem(KEY_PENDING, JSON.stringify(a));
-    const loadUsers = ()=> JSON.parse(localStorage.getItem(KEY_USERS) || "{}");
-    const saveUsers = (o)=> localStorage.setItem(KEY_USERS, JSON.stringify(o));
-    const loadTrial = ()=> JSON.parse(localStorage.getItem(KEY_TRIAL) || "null");
-    const saveTrial = (o)=> localStorage.setItem(KEY_TRIAL, JSON.stringify(o));
-    const getAdminHash = ()=> localStorage.getItem(KEY_ADMIN) || null;
-    const setAdminHash = (b)=> localStorage.setItem(KEY_ADMIN, b);
+    // Data load helpers
+    function loadEntries(){ return JSON.parse(localStorage.getItem(KEY_ENT) || "[]"); }
+    function saveEntries(arr){ localStorage.setItem(KEY_ENT, JSON.stringify(arr)); }
+    function loadTrash(){ return JSON.parse(localStorage.getItem(KEY_TRASH) || "[]"); }
+    function saveTrash(arr){ localStorage.setItem(KEY_TRASH, JSON.stringify(arr)); }
+    function loadPending(){ return JSON.parse(localStorage.getItem(KEY_PENDING) || "[]"); }
+    function savePending(arr){ localStorage.setItem(KEY_PENDING, JSON.stringify(arr)); }
+    function loadUsers(){ return JSON.parse(localStorage.getItem(KEY_USERS) || "{}"); }
+    function saveUsers(obj){ localStorage.setItem(KEY_USERS, JSON.stringify(obj)); }
+    function loadTrial(){ return JSON.parse(localStorage.getItem(KEY_TRIAL) || "null"); }
+    function saveTrial(obj){ localStorage.setItem(KEY_TRIAL, JSON.stringify(obj)); }
+    function getAdminHash(){ return localStorage.getItem(KEY_ADMIN) || null; }
+    function setAdminHash(b64){ localStorage.setItem(KEY_ADMIN, b64); }
 
-    // state
-    let entries = loadEntries(), trash = loadTrash(), pending = loadPending(), users = loadUsers(), trial = loadTrial();
+    // State
+    let entries = loadEntries();
+    let trash = loadTrash();
+    let pending = loadPending();
+    let users = loadUsers();
+    let trial = loadTrial();
 
-    // If admin not set, preset to Admin369 (base64)
-    if(!getAdminHash()){
-      setAdminHash(btoa('Admin369'));
-      // do not alert; you requested this password
-    }
-
-    // Logo tap to reveal admin hint (5 taps)
-    let tapCount = 0; let lastTap = 0;
-    logoTap.addEventListener('click', ()=> {
-      const now = Date.now();
-      if(now - lastTap > 1200) { tapCount = 0; }
-      tapCount++; lastTap = now;
-      if(tapCount >= 5){
-        openAdminHint.style.display = 'block';
-        // briefly flash admin button to indicate reveal
-        openAdminBtn.style.transform = 'scale(1.05)'; setTimeout(()=> openAdminBtn.style.transform='scale(1)',200);
-      }
+    // Splash -> Start logic
+    window.addEventListener('load', ()=> {
+      setTimeout(()=> {
+        // hide start card after user presses Start (we wait)
+      }, 200);
+      updateUI();
     });
 
-    // Start app
+    // Start app / start trial
     startApp.addEventListener('click', ()=> {
-      if(!trial){ trial = { start: (new Date()).toISOString() }; saveTrial(trial); alert('Free trial started for 30 days. Enjoy!'); }
-      startCard.style.display='none'; mainUI.classList.remove('hidden'); updateAll();
+      if(!trial){
+        trial = { start: (new Date()).toISOString() };
+        saveTrial(trial);
+        alert("Free trial started for 30 days. Enjoy full features!");
+      }
+      startCard.style.display = 'none';
+      mainUI.classList.remove('hidden');
+      updateUI();
     });
 
-    function trialActive(){ if(!trial) return false; return (Date.now() - new Date(trial.start).getTime()) < TRIAL_DAYS*24*60*60*1000; }
-    function anyPremiumActive(){ users = loadUsers(); for(const k in users){ if(users[k].premiumExpiry && Date.now() <= users[k].premiumExpiry) return true; } return false; }
+    // Check trial/premium
+    function trialActive(){
+      if(!trial) return false;
+      const start = new Date(trial.start).getTime();
+      const diff = Date.now() - start;
+      return diff < TRIAL_DAYS * 24*60*60*1000;
+    }
+    function premiumActiveFor(phone){
+      if(!phone) return false;
+      const u = users[phone];
+      if(!u || !u.premiumExpiry) return false;
+      return Date.now() <= u.premiumExpiry;
+    }
+    function anyPremiumActive(){
+      // global: if any user has premium active this device (for simplicity)
+      for(const k in users){
+        if(users[k].premiumExpiry && Date.now() <= users[k].premiumExpiry) return true;
+      }
+      return false;
+    }
     function fullAccess(){ return trialActive() || anyPremiumActive(); }
 
-    // Add entry
+    function updateBadge(){
+      if(anyPremiumActive()){ statusBadge.innerText = "PREMIUM"; statusBadge.style.background = "#ffd700"; statusBadge.style.color="#000"; }
+      else if(trialActive()){ statusBadge.innerText = "FREE TRIAL"; statusBadge.style.background = "#cfe9ff"; statusBadge.style.color="#05668d"; }
+      else { statusBadge.innerText = "UPGRADE REQUIRED"; statusBadge.style.background = "#ffd6d6"; statusBadge.style.color="#800000"; }
+    }
+
+    // Add / Edit logic
     let editId = null;
-    addBtn.addEventListener('click', ()=> {
-      if(!fullAccess()) return alert('Trial expired — please upgrade to premium.');
-      const amt = parseFloat(amountInput.value); const desc = descInput.value.trim(); const cat = catInput.value; const typ = typeInput.value;
-      if(!amt || !desc) return alert('Enter amount and description.');
+    addBtn.addEventListener('click', ()=>{
+      if(!fullAccess()){ return alert("Trial expired — please upgrade to premium to continue using full features."); }
+      const amt = parseFloat(amountInput.value);
+      const desc = descInput.value.trim();
+      const category = catInput.value;
+      const typ = typeInput.value;
+      if(!amt || !desc) { return alert("Enter amount and description"); }
+      const now = new Date();
       if(editId){
-        entries = entries.map(e=> e.id===editId ? {...e, amount:amt, desc, category:cat, type:typ, ts:Date.now()} : e);
-        editId = null; addBtn.innerText='💰 Add Entry';
+        // update existing
+        entries = entries.map(e => e.id === editId ? { ...e, amount:amt, desc, category, type:typ, ts: Date.now() } : e);
+        editId = null;
+        addBtn.innerText = '💰 Add Entry';
       } else {
-        entries.push({ id: Date.now().toString(36)+Math.random().toString(36).slice(2,6), amount:amt, desc, category:cat, type:typ, ts:Date.now() });
+        const obj = { id: Date.now().toString(36) + Math.random().toString(36).slice(2,6), amount:amt, desc, category, type:typ, ts: Date.now() };
+        entries.push(obj);
       }
-      saveEntries(entries); amountInput.value=''; descInput.value=''; renderEntries(); updateAll();
+      saveEntries(entries);
+      amountInput.value = ''; descInput.value = '';
+      renderEntries();
+      updateUI();
     });
 
-    // render entries
+    // Render entries
     function renderEntries(){
-      entries = loadEntries();
-      listDiv.innerHTML=''; const rev=[...entries].reverse();
-      rev.forEach(e=>{
+      listDiv.innerHTML = '';
+      const rev = [...entries].reverse();
+      rev.forEach(e => {
         const d = new Date(e.ts);
-        const row = document.createElement('div'); row.className='entry-row';
-        const left = document.createElement('div'); left.innerHTML = `<div><strong>${e.desc}</strong><div class="entry-meta">${d.toLocaleString()} • ${e.category}</div></div>`;
+        const left = document.createElement('div'); left.className='entry-left';
+        left.innerHTML = `<div class="entry-left"><strong>${e.desc}</strong><div class="entry-meta">${d.toLocaleString()} • ${e.category}</div></div>`;
         const right = document.createElement('div'); right.className='entry-right';
-        right.innerHTML = `<div>${e.type==='income'?'+':'-'} ₹${Number(e.amount).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>`;
+        right.innerHTML = `<div>${e.type==="income"?'+':'-'} ₹${Number(e.amount).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>`;
+        const row = document.createElement('div'); row.className='entry-row';
         const controls = document.createElement('div');
-        const editBtn = document.createElement('button'); editBtn.className='entry-btn'; editBtn.innerText='Edit'; editBtn.onclick=()=>{ editId=e.id; amountInput.value=e.amount; descInput.value=e.desc; typeInput.value=e.type; catInput.value=e.category; addBtn.innerText='Save'; window.scrollTo({top:0,behavior:'smooth'}); };
-        const delBtn = document.createElement('button'); delBtn.className='entry-btn'; delBtn.innerText='Delete'; delBtn.onclick=()=>{ if(!confirm('Move to Trash?')) return; trash.push(e); saveTrash(trash); entries=entries.filter(x=>x.id!==e.id); saveEntries(entries); renderEntries(); updateAll(); };
-        controls.appendChild(editBtn); controls.appendChild(delBtn); row.appendChild(left); row.appendChild(right); row.appendChild(controls); listDiv.appendChild(row);
+        const editBtn = document.createElement('button'); editBtn.className='entry-btn'; editBtn.innerText='Edit';
+        editBtn.onclick = ()=> {
+          editId = e.id;
+          amountInput.value = e.amount;
+          descInput.value = e.desc;
+          typeInput.value = e.type;
+          catInput.value = e.category;
+          addBtn.innerText = 'Save';
+          window.scrollTo({top:0,behavior:'smooth'});
+        };
+        const delBtn = document.createElement('button'); delBtn.className='entry-btn'; delBtn.innerText='Delete';
+        delBtn.onclick = ()=> {
+          // deletion moves to trash (recoverable); require admin to permanently delete later
+          if(!confirm('Move this entry to Trash? You can recover it later.')) return;
+          trash.push(e);
+          saveTrash(trash);
+          entries = entries.filter(x=>x.id!==e.id);
+          saveEntries(entries);
+          renderEntries(); updateUI();
+        };
+        controls.appendChild(editBtn); controls.appendChild(delBtn);
+        row.appendChild(left); row.appendChild(right); row.appendChild(controls);
+        listDiv.appendChild(row);
       });
     }
 
-    // Recover trash
-    $('recoverTrash').addEventListener('click', ()=> {
-      if(!trash || trash.length===0) return alert('Trash empty.');
-      if(!confirm('Restore all deleted entries?')) return;
-      entries = entries.concat(trash); trash = []; saveEntries(entries); saveTrash(trash); renderEntries(); updateAll(); alert('Restored.');
+    // Recover deleted (trash)
+    recoverTrash.addEventListener('click', ()=> {
+      if(!trash || trash.length===0) return alert('Trash is empty.');
+      const pick = confirm('Restore all deleted entries from Trash? (All will be returned to transactions)');
+      if(!pick) return;
+      entries = entries.concat(trash);
+      trash = [];
+      saveEntries(entries); saveTrash(trash);
+      renderEntries(); updateUI();
+      alert('Restored from Trash.');
     });
 
-    // export CSV
+    // Export CSV
     exportCsv.addEventListener('click', ()=> {
-      if(!fullAccess()) return alert('Export locked — upgrade or be in trial.');
-      const hdr=['Date','Time','Type','Category','Amount','Description'];
-      const rows = entries.map(e=>{ const d=new Date(e.ts); return [d.toLocaleDateString(),d.toLocaleTimeString(),e.type,e.category,e.amount, (e.desc+'').replace(/"/g,'""')]; });
-      let csv = hdr.join(',') + '\n' + rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-      const blob = new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mymoneytracker_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+      if(!fullAccess()) return alert('Export locked — please upgrade or be in free trial.');
+      const hdr = ['Date','Time','Type','Category','Amount','Description'];
+      const rows = entries.map(e => {
+        const d = new Date(e.ts);
+        return [d.toLocaleDateString(), d.toLocaleTimeString(), e.type, e.category, e.amount, (e.desc+'').replace(/"/g,'""')];
+      });
+      let csv = hdr.join(',') + '\n' + rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `mymoneytracker_${new Date().toISOString().slice(0,10)}.csv`; a.click();
     });
 
-    // export PDF (print)
+    // Print / PDF (open new window then print)
     exportPdf.addEventListener('click', ()=> {
-      if(!fullAccess()) return alert('Export locked — upgrade or be in trial.');
-      let html=`<h2>My Money Tracker - Report</h2><table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><tr><th>Date</th><th>Time</th><th>Type</th><th>Category</th><th>Amount</th><th>Description</th></tr>`;
-      entries.forEach(e=>{ const d=new Date(e.ts); html+=`<tr><td>${d.toLocaleDateString()}</td><td>${d.toLocaleTimeString()}</td><td>${e.type}</td><td>${e.category}</td><td>₹${e.amount}</td><td>${e.desc}</td></tr>`; });
-      html += `</table>`; const w=window.open('','_blank','width=900,height=700'); w.document.write(html); w.document.close(); w.print();
+      if(!fullAccess()) return alert('Export locked — please upgrade or be in free trial.');
+      let html = `<h2>My Money Tracker - Report</h2><table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><tr><th>Date</th><th>Time</th><th>Type</th><th>Category</th><th>Amount</th><th>Description</th></tr>`;
+      entries.forEach(e => {
+        const d = new Date(e.ts);
+        html += `<tr><td>${d.toLocaleDateString()}</td><td>${d.toLocaleTimeString()}</td><td>${e.type}</td><td>${e.category}</td><td>₹${e.amount}</td><td>${e.desc}</td></tr>`;
+      });
+      html += `</table>`;
+      const w = window.open('','_blank','width=900,height=700');
+      w.document.write(html); w.document.close(); w.print();
     });
 
-    // backup download
+    // Backup download
     downloadBackup.addEventListener('click', ()=> {
-      const payload={entries,trash,pending,users,trial,ts:new Date().toISOString()};
-      const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mymoneytracker_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+      const payload = { entries, trash, pending, users, trial, ts: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(payload,null,2)], { type:'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `mymoneytracker_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
     });
 
-    // restore
+    // Restore backup via file input
     restoreBackupBtn.addEventListener('click', ()=> $('restoreInput').click());
     restoreInput.addEventListener('change', (ev)=> {
-      const f=ev.target.files[0]; if(!f) return; const r=new FileReader();
-      r.onload=()=>{ try{ const data=JSON.parse(r.result); if(data.entries) entries=data.entries; if(data.trash) trash=data.trash; if(data.pending) pending=data.pending; if(data.users) users=data.users; if(data.trial) { trial=data.trial; saveTrial(trial);} saveEntries(entries); saveTrash(trash); savePending(pending); saveUsers(users); renderEntries(); updateAll(); alert('Backup restored.'); }catch(e){ alert('Invalid backup file.'); } };
+      const f = ev.target.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = ()=> {
+        try {
+          const data = JSON.parse(r.result);
+          if(data.entries) entries = data.entries;
+          if(data.trash) trash = data.trash;
+          if(data.pending) pending = data.pending;
+          if(data.users) users = data.users;
+          if(data.trial) { trial = data.trial; saveTrial(trial); }
+          saveEntries(entries); saveTrash(trash); savePending(pending); saveUsers(users);
+          renderEntries(); updateUI();
+          alert('Backup restored successfully.');
+        } catch(e){ alert('Invalid backup file.'); }
+      };
       r.readAsText(f);
     });
 
-    // upgrade modal
-    function generateQr(){ const upi = encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=My%20Money%20Tracker&cu=INR`); $('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${upi}`; }
-    $('openUpgrade').addEventListener('click', ()=> { generateQr(); $('upgradeModal').style.display='flex'; });
-    $('openUpgrade2') && $('openUpgrade2').addEventListener('click', ()=> { generateQr(); $('upgradeModal').style.display='flex'; });
-    $('closeUpgrade').addEventListener('click', ()=> $('upgradeModal').style.display='none');
+    // Premium QR generation + modal open/close
+    function generateQr(){
+      const upi = encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=My%20Money%20Tracker&cu=INR`);
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${upi}`;
+    }
+    $('openUpgrade').addEventListener('click', ()=> {
+      generateQr();
+      $('upgradeModal').style.display = 'flex';
+    });
+    $('openUpgrade2') && $('openUpgrade2').addEventListener('click', ()=> {
+      generateQr();
+      $('upgradeModal').style.display = 'flex';
+    });
+    $('closeUpgrade').addEventListener('click', ()=> $('upgradeModal').style.display = 'none');
+    // "I Paid" -> add pending claim + open whatsapp to admin
     iPaidBtn.addEventListener('click', ()=> {
-      const phone = payerPhone.value.trim()||'unknown'; const plan = planSelect.value;
-      pending.push({phone,plan,ts:Date.now()}); savePending(pending);
+      const phone = payerPhone.value.trim() || 'unknown';
+      const plan = planSelect.value;
+      pending.push({ phone, plan, ts: Date.now() });
+      savePending(pending);
       const msg = `Payment claimed by ${phone} for My Money Tracker - ₹${plan}. Please verify and approve.`;
-      window.open(`https://wa.me/${ADMIN_WH}?text=${encodeURIComponent(msg)}`,'_blank');
-      alert('Claim added and WhatsApp opened to admin.'); $('upgradeModal').style.display='none';
+      // open whatsapp to admin
+      window.open(`https://wa.me/${ADMIN_WH}?text=${encodeURIComponent(msg)}`, '_blank');
+      alert('Claim added to pending list and WhatsApp opened to admin.');
+      $('upgradeModal').style.display = 'none';
     });
 
-    // Admin flows
-    $('openAdmin') && $('openAdmin').addEventListener('click', ()=> $('adminModal').style.display='flex');
-    $('closeAdmin').addEventListener('click', ()=> $('adminModal').style.display='none');
+    // Admin modal open/close + login behavior
+    $('openAdmin').addEventListener('click', ()=> $('adminModal').style.display = 'flex');
+    $('closeAdmin').addEventListener('click', ()=> $('adminModal').style.display = 'none');
 
     adminLoginBtn.addEventListener('click', ()=> {
-      const pass = adminPass.value.trim(); if(!pass) return alert('Enter password.');
+      const pass = adminPass.value.trim();
+      if(!pass){ alert('Enter password'); return; }
       const stored = getAdminHash();
-      if(!stored){ // set first time (shouldn't happen due to preset)
-        if(confirm('No admin set. Set this password?')){ setAdminHash(btoa(pass)); adminPass.value=''; alert('Admin password saved. Reopen admin and login.'); return; } else return;
+      if(!stored){
+        // set first-time
+        if(confirm('No admin password set. Use this password to set admin?')) {
+          setAdminHash(btoa(pass));
+          adminPass.value='';
+          alert('Admin password saved. Reopen admin and login.');
+          return;
+        } else return;
       }
-      if(btoa(pass) === stored){ $('adminLoginArea').style.display='none'; adminArea.style.display='block'; renderPending(); } else alert('Wrong password.');
+      // verify
+      if(btoa(pass) === stored){
+        // show admin area
+        $('adminLoginArea').style.display = 'none';
+        adminArea.style.display = 'block';
+        renderPending();
+      } else {
+        alert('Wrong password.');
+      }
     });
 
-    function renderPending(){ pending = loadPending(); pendingList.innerHTML=''; if(!pending||pending.length===0){ pendingList.innerHTML='<div style="color:#666">No pending payments</div>'; return; } pending.forEach((p,idx)=>{ const row=document.createElement('div'); row.className='pending-row'; const left=document.createElement('div'); left.innerHTML=`<div><strong>${p.phone}</strong> • ₹${p.plan}</div><div style="font-size:12px;color:#666">${new Date(p.ts).toLocaleString()}</div>`; const right=document.createElement('div'); const chk=document.createElement('input'); chk.type='checkbox'; chk.dataset.idx=idx; right.appendChild(chk); const approveOne=document.createElement('button'); approveOne.className='entry-btn'; approveOne.innerText='Approve'; approveOne.onclick=()=> approveClaim(idx); right.appendChild(approveOne); row.appendChild(left); row.appendChild(right); pendingList.appendChild(row); }); }
-
+    // Render pending claims
+    function renderPending(){
+      pending = loadPending();
+      pendingList.innerHTML = '';
+      if(!pending || pending.length===0) { pendingList.innerHTML = '<div style="color:#666">No pending payments</div>'; return; }
+      pending.forEach((p, idx) => {
+        const row = document.createElement('div'); row.className='pending-row';
+        const left = document.createElement('div'); left.innerHTML = `<div><strong>${p.phone}</strong> • ₹${p.plan}</div><div style="font-size:12px;color:#666">${new Date(p.ts).toLocaleString()}</div>`;
+        const right = document.createElement('div');
+        const chk = document.createElement('input'); chk.type='checkbox'; chk.dataset.idx = idx;
+        right.appendChild(chk);
+        const approveOne = document.createElement('button'); approveOne.className='entry-btn'; approveOne.innerText='Approve';
+        approveOne.onclick = ()=> approveClaim(idx);
+        right.appendChild(approveOne);
+        row.appendChild(left); row.appendChild(right); pendingList.appendChild(row);
+      });
+    }
     refreshPending.addEventListener('click', renderPending);
 
-    approveSelected.addEventListener('click', ()=> { const checks = pendingList.querySelectorAll('input[type="checkbox"]'); let found=false; checks.forEach(c=>{ if(c.checked){ found=true; approveClaim(parseInt(c.dataset.idx)); } }); if(!found) alert('Select at least one.'); });
-
-    function approveClaim(idx){ const p = pending[idx]; if(!p) return alert('Invalid'); const days = (p.plan==='29'||Number(p.plan)===29)?30:1095; const expiry = Date.now() + days*24*60*60*1000; users = loadUsers(); users[p.phone]=users[p.phone]||{}; users[p.phone].premiumExpiry = expiry; saveUsers(users); pending.splice(idx,1); savePending(pending); alert(`Approved ${p.phone}. Premium until ${new Date(expiry).toLocaleDateString()}`); renderPending(); updateAll(); }
-
-    changePass.addEventListener('click', ()=> {
-      const cur = prompt('Enter current admin password:'); if(!cur) return; if(btoa(cur)!==getAdminHash()) return alert('Wrong current password.');
-      const np = prompt('Enter new admin password:'); if(np){ setAdminHash(btoa(np)); alert('Admin password updated.'); }
+    approveSelected.addEventListener('click', ()=> {
+      // approve all checked claims
+      const checks = pendingList.querySelectorAll('input[type="checkbox"]');
+      let found=false;
+      checks.forEach(c => {
+        if(c.checked){
+          found=true; approveClaim(parseInt(c.dataset.idx));
+        }
+      });
+      if(!found) alert('Select at least one pending claim (checkbox).');
     });
 
-    logoutAdmin.addEventListener('click', ()=>{ adminArea.style.display='none'; $('adminLoginArea').style.display='block'; adminPass.value=''; });
+    function approveClaim(idx){
+      const p = pending[idx];
+      if(!p) return alert('Invalid pending item.');
+      // ask admin which plan to give -> use claim's plan by default
+      const days = (p.plan==='29' || Number(p.plan)===29) ? 30 : 1095;
+      const expiry = Date.now() + days*24*60*60*1000;
+      // set premium for claimed phone in users map
+      users = loadUsers();
+      users[p.phone] = users[p.phone] || {};
+      users[p.phone].premiumExpiry = expiry;
+      saveUsers(users);
+      // remove from pending
+      pending.splice(idx,1);
+      savePending(pending);
+      alert(`Approved ${p.phone}. Premium active until ${new Date(expiry).toLocaleDateString()}`);
+      renderPending();
+      updateUI();
+    }
+
+    changePass.addEventListener('click', ()=> {
+      const current = prompt('Enter current admin password (cancel to abort):');
+      if(!current) return;
+      if(btoa(current) !== getAdminHash()) return alert('Wrong current password.');
+      const np = prompt('Enter new admin password:');
+      if(np) { setAdminHash(btoa(np)); alert('Admin password updated.'); }
+    });
+
+    logoutAdmin.addEventListener('click', ()=> {
+      adminArea.style.display = 'none'; $('adminLoginArea').style.display = 'block'; adminPass.value='';
+    });
 
     function getAdminHash(){ return localStorage.getItem(KEY_ADMIN) || null; }
-    function savePending(arr){ localStorage.setItem(KEY_PENDING, JSON.stringify(arr)); }
-    function saveUsers(o){ localStorage.setItem(KEY_USERS, JSON.stringify(o)); }
-    function saveTrash(a){ localStorage.setItem(KEY_TRASH, JSON.stringify(a)); }
-    function saveTrial(t){ localStorage.setItem(KEY_TRIAL, JSON.stringify(t)); }
     function setAdminHash(b64){ localStorage.setItem(KEY_ADMIN, b64); }
 
-    // compute summary & UI
-    function formatMoney(n){ return "₹"+Number(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-    function computeSummary(){ let income=0,expense=0; const now=new Date(); const today=now.toDateString(); const month=now.getMonth(),year=now.getFullYear(); let todayTotal=0,monthTotal=0; entries.forEach(e=>{ if(e.type==='income') income+=Number(e.amount); else expense+=Number(e.amount); const d=new Date(e.ts); if(d.toDateString()===today) todayTotal += (e.type==='income'?Number(e.amount):-Number(e.amount)); if(d.getMonth()===month && d.getFullYear()===year) monthTotal += (e.type==='income'?Number(e.amount):-Number(e.amount)); }); $('todayTotal').innerText = formatMoney(todayTotal); $('monthTotal').innerText = formatMoney(monthTotal); $('incExp').innerText = `${formatMoney(income)} / ${formatMoney(expense)}`; $('balance').innerText = formatMoney(income-expense); const monthPrefix=new Date().toISOString().slice(0,7); const cnt = entries.filter(e=>e.ts && new Date(e.ts).toISOString().startsWith(monthPrefix)).length; entryCountEl.innerText = cnt; }
+    // Permanently clear all (dangerous) - require admin
+    // Not exposed directly — admin can remove via console if needed.
 
-    function updateBadge(){ if(anyPremiumActive()){ statusBadge.innerText='PREMIUM'; statusBadge.style.background='#ffd700'; statusBadge.style.color='#000'; } else if(trialActive()){ statusBadge.innerText='FREE TRIAL'; statusBadge.style.background='#cfe9ff'; statusBadge.style.color='#05668d'; } else { statusBadge.innerText='UPGRADE REQUIRED'; statusBadge.style.background='#ffd6d6'; statusBadge.style.color='#800000'; } }
+    // Utilities & UI update
+    function formatMoney(n){ return "₹" + Number(n).toLocaleString('en-IN',{minimumFractionDigits:2, maximumFractionDigits:2}); }
 
-    function updateAll(){ entries = loadEntries(); trash = loadTrash(); pending = loadPending(); users = loadUsers(); computeSummary(); renderEntries(); updateBadge(); }
+    function computeSummary(){
+      let income=0, expense=0;
+      const now = new Date();
+      const today = now.toDateString();
+      const month = now.getMonth(), year = now.getFullYear();
+      let todayTotal=0, monthTotal=0;
+      entries.forEach(e => {
+        if(e.type==='income') income += Number(e.amount); else expense += Number(e.amount);
+        const d = new Date(e.ts);
+        if(d.toDateString()===today) todayTotal += (e.type==='income'?Number(e.amount):-Number(e.amount));
+        if(d.getMonth()===month && d.getFullYear()===year) monthTotal += (e.type==='income'?Number(e.amount):-Number(e.amount));
+      });
+      $('todayTotal').innerText = formatMoney(todayTotal);
+      $('monthTotal').innerText = formatMoney(monthTotal);
+      $('incExp').innerText = `${formatMoney(income)} / ${formatMoney(expense)}`;
+      $('balance').innerText = formatMoney(income-expense);
+      // entry count this month
+      const monthPrefix = new Date().toISOString().slice(0,7);
+      const cnt = entries.filter(e => e.ts && new Date(e.ts).toISOString().startsWith(monthPrefix)).length;
+      entryCountEl.innerText = cnt;
+    }
 
-    // initial
-    renderEntries(); updateAll();
+    function updateUI(){
+      entries = loadEntries(); trash = loadTrash(); pending = loadPending(); users = loadUsers();
+      computeSummary(); renderEntries(); updateBadge();
+    }
 
-    // periodic cleanup of expired premiums
-    setInterval(()=>{ users = loadUsers(); let changed=false; for(const p in users){ if(users[p].premiumExpiry && Date.now()>users[p].premiumExpiry){ delete users[p].premiumExpiry; changed=true; } } if(changed) saveUsers(users); updateAll(); },30*60*1000);
+    // initial render
+    renderEntries();
+    updateUI();
 
-    // expose for debugging
-    window.MyMoneyTracker = { loadEntries, saveEntries, loadTrash, saveTrash, loadPending, savePending, loadUsers, saveUsers, loadTrial, saveTrial };
+    // check premium expiry periodically
+    setInterval(()=> {
+      // remove expired premiums
+      users = loadUsers();
+      let changed=false;
+      for(const phone in users){
+        if(users[phone].premiumExpiry && Date.now() > users[phone].premiumExpiry){
+          delete users[phone].premiumExpiry; changed=true;
+        }
+      }
+      if(changed) saveUsers(users);
+      updateUI();
+    }, 30*60*1000); // every 30 min
 
+    // safe expose to console for debugging
+    window.MoneyTracker = {
+      loadEntries, saveEntries, loadTrash, saveTrash, loadPending, savePending, loadUsers, saveUsers, loadTrial, saveTrial
+    };
+
+    // small helper: ensure restore input cleared after use
+    restoreInput.addEventListener('change', ()=> { restoreInput.value = ''; });
+
+    // Done
   })();
   </script>
+  <br><br>
+<a href="money-management.html" target="_blank" style="
+  display:inline-block;
+  background:#00ffb3;
+  color:#000;
+  padding:12px 25px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
+  margin-top:20px;
+">💰 Open Money Management App</a>
 </body>
 </html>
