@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Money Management App</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 26px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      width: 80%;
+      text-align: center;
+    }
+    button {
+      background: #00ffb3;
+      color: #000;
+      border: none;
+      padding: 12px 25px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .result {
+      margin-top: 25px;
+      text-align: left;
+    }
+    .box {
+      padding: 15px;
+      border-radius: 12px;
+      margin: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .emergency { background: #ff5c5c; }
+    .essentials { background: #4fa3ff; }
+    .savings { background: #47ff85; }
+    .fun { background: #d78bff; }
+  </style>
+</head>
+<body>
+  <h1>💰 Your Wealth, Your Rules!</h1>
+  <p>Enter any amount to see your smart money plan 💜</p>
+
+  <div class="container">
+    <input type="number" id="income" placeholder="Enter your income (₹)" />
+    <br>
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      let income = parseFloat(document.getElementById("income").value);
+      if (!income || income <= 0) {
+        alert("Please enter a valid amount 🙏");
+        return;
+      }
+
+      let emergency = income * 0.2;
+      let essentials = income * 0.5;
+      let savings = income * 0.2;
+      let fun = income * 0.1;
+
+      document.getElementById("result").innerHTML = `
+        <div class="box emergency">🚨 Emergency Fund: ₹${emergency.toFixed(2)}</div>
+        <div class="box essentials">🏠 Essentials (Rent, Bills, Food): ₹${essentials.toFixed(2)}</div>
+        <div class="box savings">💹 Savings & Investments: ₹${savings.toFixed(2)}</div>
+        <div class="box fun">🎉 Fun & Treat Yourself: ₹${fun.toFixed(2)}</div>
+        <p style="margin-top:15px;font-size:16px;">Keep growing 🌱, every rupee counts!</p>
+      `;
+    }
+  </script>
+</body>
+</html>
