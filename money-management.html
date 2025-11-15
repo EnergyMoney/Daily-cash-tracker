@@ -8,6 +8,12 @@ if ('serviceWorker' in navigator) {
 </script>
 <head>
   <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest-budgetbuddy.json">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>💸 Smart Money Manager</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
