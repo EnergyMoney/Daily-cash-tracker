@@ -1,23 +1,22 @@
 <!doctype html>
 <html lang="en">
-  <link rel="manifest" href="manifest.json">
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
 <head>
   <meta charset="utf-8" />
-  <link rel="manifest" href="manifest-finflow.json">
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My Money Tracker</title>
+  <title>FinFlow — My Money Tracker</title>
 
-  <!-- Simple colorful light theme -->
+  <!-- PWA manifest: use the FinFlow manifest (ensure file exists in repo) -->
+  <link rel="manifest" href="manifest-finflow.json">
+
+  <!-- Service Worker registration (single registration) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(function(err){
+        console.warn('ServiceWorker registration failed:', err);
+      });
+    }
+  </script>
+
   <style>
     :root{
       --bg1:#f7fbff; --accent1:#7bd389; --accent2:#ff9aa2; --card:#ffffff;
@@ -97,7 +96,7 @@ if ('serviceWorker' in navigator) {
       <div class="brand">
         <div class="logo">MM</div>
         <div>
-          My Money Tracker
+          FinFlow
           <div style="font-size:12px;color:#123;">Manage daily cash, backup, export & premium</div>
         </div>
       </div>
@@ -252,8 +251,6 @@ if ('serviceWorker' in navigator) {
       </div>
     </div>
   </div>
-
-  <!-- Minimal icons via inline SVG templates if needed (omitted) -->
 
   <!-- Script: app logic -->
   <script>
@@ -495,7 +492,7 @@ if ('serviceWorker' in navigator) {
 
     // Premium QR generation + modal open/close
     function generateQr(){
-      const upi = encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=My%20Money%20Tracker&cu=INR`);
+      const upi = encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=FinFlow&cu=INR`);
       qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${upi}`;
     }
     $('openUpgrade').addEventListener('click', ()=> {
@@ -513,7 +510,7 @@ if ('serviceWorker' in navigator) {
       const plan = planSelect.value;
       pending.push({ phone, plan, ts: Date.now() });
       savePending(pending);
-      const msg = `Payment claimed by ${phone} for My Money Tracker - ₹${plan}. Please verify and approve.`;
+      const msg = `Payment claimed by ${phone} for FinFlow - ₹${plan}. Please verify and approve.`;
       // open whatsapp to admin
       window.open(`https://wa.me/${ADMIN_WH}?text=${encodeURIComponent(msg)}`, '_blank');
       alert('Claim added to pending list and WhatsApp opened to admin.');
