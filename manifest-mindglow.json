@@ -1,0 +1,20 @@
+{
+  "name": "MindGlow",
+  "short_name": "MindGlow",
+  "start_url": "mind-glow.html",
+  "display": "standalone",
+  "background_color": "#ff00aa",
+  "theme_color": "#ff66cc",
+  "icons": [
+    {
+      "src": "icons/mindglow-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/mindglow-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
